@@ -1,0 +1,3443 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ErenX — Yapay Zekâ Sohbet ve Geliştirme Ajanı</title>
+<meta name="description" content="ErenX: sohbet eden, kod yazan, çoklu ortam ve hafıza destekleyen yapay zekâ asistanı.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='116' fill='%230d0f1a'/%3E%3Cpath d='M372 140 290 222M222 290 140 372' stroke='%239b5cf6' stroke-width='48' stroke-linecap='round'/%3E%3Cpath d='M140 140 372 372' stroke='%234f8bff' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0b0c10;--p:#12141c;--p2:#1a1d29;--ub:#1e2333;--t:#f8fafc;--m:#94a3b8;--b:rgba(255,255,255,0.08);--cd:#07080b;--a:#8b5cf6;--v:#a855f7;--bl:#38bdf8;--w:#f59e0b;--e:#f43f5e;--ok:#10b981;--code-bar:#141620}
+[data-theme=light]{--bg:#faf9f5;--p:#f0eee6;--p2:#fff;--ub:#f0eee6;--t:#141413;--m:#73726c;--b:#e3e0d5;--cd:#f5f4ee;--a:#c6613f;--v:#7c3aed;--bl:#2563eb;--w:#d97706;--e:#dc2626;--ok:#10b981}
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--t);font:14px/1.6 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,textarea,input,select{font:inherit;color:inherit}
+button{cursor:pointer}:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+#app{display:grid;grid-template-columns:270px 1fr;height:100%}
+#app.pj{grid-template-columns:270px 1fr 410px}
+aside{background:var(--p);display:flex;flex-direction:column;min-height:0;padding:12px;gap:8px;padding-top:max(12px,env(safe-area-inset-top))}
+#side{border-right:1px solid var(--b)}#proj{border-left:1px solid var(--b);display:none}
+#app.pj #proj{display:flex}
+.brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;padding:4px}
+.logo{width:28px;height:28px;display:block}
+.btn{background:transparent;border:1px solid var(--b);border-radius:9px;padding:7px 12px;font-size:13px;font-weight:500;color:var(--t);transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:hover{border-color:var(--m);background:var(--p2)}.btn.pri{background:var(--a);color:#fff;border:0}
+.btn.pri:hover{opacity:.9}.btn:disabled{opacity:.45;cursor:not-allowed}
+.search-box{position:relative;margin:2px 0}
+.search-box input{width:100%;background:var(--p2);border:1px solid var(--b);border-radius:8px;padding:6px 28px 6px 9px;font-size:12.5px}
+.search-box input:focus{border-color:var(--a);outline:none}
+.search-box .clr{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--m);font-size:11px;padding:2px 4px}
+#list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:3px;margin:2px 0}
+.ci{display:flex;align-items:center;border-radius:8px;padding:2px;position:relative}
+.ci:hover,.ci.on{background:var(--p2)}
+.ci button.t{flex:1;text-align:left;background:none;border:0;padding:6px 8px;font-size:13px;color:var(--m);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.ci.on button.t,.ci:hover button.t{color:var(--t)}
+.ci .c-badge{font-size:11px;opacity:.9;flex:none;background:var(--p);border:1px solid var(--b);border-radius:4px;padding:1px 4px;line-height:1.2}
+.ci .c-acts{display:none;align-items:center;gap:2px;padding-right:4px}
+.ci:hover .c-acts,.ci.on .c-acts{display:flex}
+.ci button.icon-btn{background:none;border:0;color:var(--m);padding:3px 5px;border-radius:4px;font-size:12px;line-height:1}
+.ci button.icon-btn:hover{color:var(--t);background:var(--b)}
+.ci.pinned{border-left:2px solid var(--a)}
+.ci.pinned button.pin{color:var(--a)}
+.sf{display:flex;gap:4px;flex-wrap:wrap}.sf .btn{flex:1 1 45%;padding:6px 4px;font-size:11px;text-align:center}
+.side-sub{display:flex;align-items:center;justify-content:space-between;padding:0 4px;font-size:11.5px;color:var(--m)}
+main{display:flex;flex-direction:column;min-width:0;min-height:0;height:100%}
+header{display:flex;align-items:center;gap:8px;padding:8px 16px;padding-top:max(8px,env(safe-area-inset-top));border-bottom:0}
+header h1{flex:1;font-size:14px;font-weight:500;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ic{display:none;background:none;border:0;font-size:20px;padding:4px}
+.badge{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--b);color:var(--m);white-space:nowrap}
+
+/* Mod Seçici Açılır Menü */
+.mode-dd{position:relative}
+.mode-btn{background:var(--p);border:1px solid var(--b);border-radius:10px;padding:5px 10px;font-size:12.5px;display:flex;align-items:center;gap:6px;color:var(--t)}
+.mode-btn:hover{border-color:var(--m);background:var(--p2)}
+.mode-menu{position:absolute;top:calc(100% + 4px);left:0;background:var(--p);border:1px solid var(--b);border-radius:12px;padding:6px;width:240px;box-shadow:0 8px 24px #00000044;z-index:20;display:none;flex-direction:column;gap:3px}
+.mode-menu.open{display:flex}
+.mode-opt{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:none;border:0;text-align:left;width:100%}
+.mode-opt:hover,.mode-opt.active{background:var(--p2);color:var(--t)}
+.mode-opt .m-ico{font-size:16px;width:20px;text-align:center}
+.mode-opt .m-info{display:flex;flex-direction:column;min-width:0;flex:1}
+.mode-opt .m-tit{font-size:12.5px;font-weight:600}
+.mode-opt .m-des{font-size:11px;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mode-divider{height:1px;background:var(--b);margin:4px 0}
+
+#msgs{flex:1;overflow:auto;padding:20px 16px;scroll-behavior:smooth}
+.m{max-width:780px;margin:0 auto 20px}
+.who{font-size:11px;color:var(--m);margin-bottom:3px;display:none}
+.m.user{display:flex;flex-direction:column;align-items:flex-end}
+.m.user .bd{background:var(--ub);border:0;border-radius:18px;margin-left:0;max-width:85%;padding:6px 16px}
+.m.assistant .bd{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI Variable Text","Segoe UI",Roboto,sans-serif;font-size:14.5px;line-height:1.7;color:var(--t)}
+.m.assistant .bd .cb,.m.assistant .bd .cb *{font-family:ui-monospace,Consolas,monospace}
+.m.assistant .bd .ch span,.m.assistant .bd .ch button{font-family:"Segoe UI",system-ui,sans-serif}
+.bd p,.bd ul,.bd ol{margin:.45em 0}.bd li{margin:.15em 0}
+.bd h2,.bd h3,.bd h4,.bd h5{font-weight:600;margin:.8em 0 .25em;line-height:1.3}
+.bd h2{font-size:1.25em}.bd h3{font-size:1.15em}.bd h4{font-size:1.05em}
+.bd code{background:var(--cd);border:1px solid var(--b);border-radius:5px;padding:1px 5px;font:12px ui-monospace,Consolas,monospace}
+.bd a{color:var(--t);text-decoration:underline}
+.cb{border:1px solid var(--b);border-radius:10px;overflow:hidden;margin:10px 0;background:var(--cd)}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:3px 8px 3px 12px;background:var(--p);font-size:11px;color:var(--m)}
+.ch button{background:none;border:0;color:var(--a);padding:4px 8px;font-size:11px}
+.cb pre{margin:0;padding:10px 12px;overflow:auto;max-height:480px}
+.cb pre code{background:none;border:0;padding:0;font-size:12.5px;line-height:1.55}
+.act{display:flex;align-items:center;gap:6px;margin-top:4px}
+.act button{background:none;border:0;color:var(--m);font-size:11.5px;padding:2px 6px;border-radius:6px}
+.act button:hover{color:var(--t);background:var(--p2)}
+.act .meta-pill{font-size:11px;color:var(--m);background:var(--p);border:1px solid var(--b);border-radius:99px;padding:1px 7px;margin-left:auto}
+.m-imgs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.m-imgs img{max-width:180px;max-height:180px;border-radius:10px;border:1px solid var(--b);cursor:pointer;object-fit:cover}
+
+/* Hafıza Öneri Kartı */
+.mem-card{background:var(--p);border:1px solid var(--a);border-radius:12px;padding:10px 14px;margin:8px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px}
+.mem-card span{flex:1;min-width:200px}
+.mem-acts{display:flex;gap:6px}
+.mem-card.saved{border-color:var(--ok);color:var(--ok)}
+
+.empty{max-width:640px;margin:10vh auto 0;text-align:center}
+.empty .logo{width:64px;height:64px;margin:0 auto 14px}
+.empty h2{font-size:22px;font-weight:600;margin:0 0 6px}.empty p{color:var(--m);font-size:13.5px;max-width:480px;margin:0 auto 20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chips button{background:transparent;border:1px solid var(--b);border-radius:11px;padding:8px 13px;font-size:12.5px;text-align:left}
+.chips button:hover{border-color:var(--m);background:var(--p2)}
+#st{margin:0 16px;max-width:780px;align-self:center;width:calc(100% - 32px);padding:7px 12px;border:1px solid var(--b);border-radius:10px;color:var(--m);font-size:12.5px}
+#err{margin:0 16px;padding:8px 12px;border:1px solid var(--e);border-radius:10px;color:var(--e);max-width:780px;align-self:center;width:calc(100% - 32px);font-size:12.5px}
+.comp{max-width:792px;width:100%;margin:0 auto;padding:6px 16px max(12px,env(safe-area-inset-bottom))}
+.att-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;padding:0 4px}
+.att-chip{display:flex;align-items:center;gap:6px;background:var(--p);border:1px solid var(--b);border-radius:8px;padding:3px 8px;font-size:12px;color:var(--t)}
+.att-chip img{width:22px;height:22px;border-radius:4px;object-fit:cover}
+.att-chip .x{background:none;border:0;color:var(--m);padding:0 2px;font-size:12px}
+.att-chip .x:hover{color:var(--e)}
+.box{display:flex;align-items:flex-end;gap:6px;background:var(--p2);border:1px solid var(--b);border-radius:22px;padding:6px 8px 6px 12px;box-shadow:0 2px 14px #00000028;transition:border-color .15s}
+.box:focus-within{border-color:var(--m)}.box.drag-over{border-color:var(--a);background:var(--p)}
+.box textarea{flex:1;background:none;border:0;outline:none;padding:7px 0;max-height:180px;line-height:1.5;font-size:14px;resize:none}
+.box textarea::placeholder{color:var(--m)}
+.box-btn{background:none;border:0;color:var(--m);padding:6px;border-radius:50%;display:grid;place-items:center;transition:color .15s}
+.box-btn:hover{color:var(--t)}
+.box-btn.rec-active{color:var(--e);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+#send{width:34px;height:34px;border-radius:50%;padding:0;display:grid;place-items:center;flex:none;background:var(--a);color:#fff;border:0}
+#send:hover{opacity:.88}
+.foot{text-align:center;font-size:11px;color:var(--m);margin-top:6px}
+.foot kbd{font-family:inherit;background:var(--p);border:1px solid var(--b);border-radius:4px;padding:1px 4px;font-size:10px}
+.setup{max-width:520px;margin:20px auto 0;padding:14px;border:1px solid var(--b);border-radius:14px;background:var(--p2);text-align:left;font-size:13px}
+.setup b{display:block;margin-bottom:8px;font-weight:600}.setup .r{display:flex;gap:8px;flex-wrap:wrap}
+.setup select,.setup input[type=password]{background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:7px 9px;font-size:13px}
+.setup input[type=password]{flex:1;min-width:180px}
+.setup label{display:flex;gap:6px;align-items:center;margin-top:8px;color:var(--m);font-size:12px}
+.think{display:flex;align-items:center;gap:10px;padding:2px 0;font-size:13.5px}
+.spk{width:18px;height:18px;fill:var(--a);flex:none;animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.shim{background:linear-gradient(90deg,var(--m) 25%,var(--t) 50%,var(--m) 75%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 1.8s linear infinite}
+@keyframes sh{from{background-position:110% 0}to{background-position:-110% 0}}
+.think em{color:var(--m);font-style:normal;font-size:12px}
+.steps{border:0;background:none;margin:2px 0;border-radius:0}
+.steps summary{padding:4px 0;list-style:none;font-size:12.5px;color:var(--m);cursor:pointer;user-select:none}
+.steps summary::-webkit-details-marker{display:none}
+.steps summary::before{content:"›";display:inline-block;margin-right:6px;transition:transform .15s}
+.steps[open] summary::before{transform:rotate(90deg)}
+.tl{margin:4px 0 8px 6px;border-left:1px solid var(--b);padding-left:14px}
+.stp{border:0;padding:3px 0;position:relative;font-size:12.5px;display:flex;align-items:center;gap:8px}
+.stp i{position:absolute;left:-19px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--m);box-shadow:0 0 0 3px var(--bg);flex:none}
+.stp.run i{background:var(--a);animation:d 1s infinite}.stp.ok i{background:var(--ok)}.stp.err i{background:var(--e)}
+.stp em{margin-left:auto;color:var(--m);font-style:normal;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
+@keyframes d{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.tr{margin:0;white-space:pre-wrap;font:12px/1.5 ui-monospace,Consolas,monospace;color:var(--m)}
+.edit-box{display:flex;flex-direction:column;gap:6px;width:100%;margin:4px 0}
+.edit-box textarea{width:100%;background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:8px;font-size:13.5px;resize:vertical;min-height:70px}
+.edit-acts{display:flex;gap:6px;justify-content:flex-end}
+.pk{display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
+.ph{display:flex;justify-content:space-between;align-items:center}.ph b{font-size:14px}
+#files{display:flex;flex-wrap:wrap;gap:6px}
+#files button{background:var(--p2);border:1px solid var(--b);border-radius:8px;padding:4px 9px;font-size:12px}
+#files button.on{border-color:var(--a);color:var(--a)}
+.pa{display:flex;flex-wrap:wrap;gap:6px}.pa .btn{padding:5px 9px;font-size:12px}
+#view{flex:1;min-height:200px;overflow:auto;border:1px solid var(--b);border-radius:10px;background:var(--cd)}
+#view pre{margin:0;padding:10px;font:12px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+#view iframe{width:100%;height:100%;border:0;background:#fff}
+.hint{color:var(--m);font-size:12.5px;padding:8px}
+dialog:not([open]){display:none!important}
+dialog{background:var(--p);color:var(--t);border:1px solid var(--b);border-radius:16px;width:min(540px,94vw);padding:20px;box-shadow:0 12px 40px #00000066}
+dialog::backdrop{background:#000a;backdrop-filter:blur(3px)}
+dialog label{display:block;margin:10px 0 3px;font-size:13px;color:var(--m)}
+dialog input[type=text],dialog input[type=password],dialog select,dialog textarea{width:100%;background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:8px;font-size:13px}
+dialog .ck{display:flex;gap:8px;align-items:center;margin:8px 0 0;color:var(--t)}
+.warn{font-size:12px;color:var(--w);margin:10px 0;line-height:1.5}
+.row{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+
+/* Hafıza Listesi ve Düzenleme */
+.mem-list{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow:auto;margin:10px 0;padding:2px}
+.mem-item{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:8px 10px;font-size:12.5px}
+.mem-item .mem-txt{flex:1;word-break:break-word}
+.mem-item .mem-btns{display:flex;align-items:center;gap:4px}
+.mem-item button{background:none;border:0;color:var(--m);padding:3px 6px;border-radius:4px;font-size:12px}
+.mem-item button:hover{color:var(--t);background:var(--p2)}
+.mem-item button.del:hover{color:var(--e)}
+.mem-edit-box{display:flex;gap:6px;width:100%}
+.mem-edit-box input{flex:1}
+
+/* Komut Paleti */
+#cmd-dlg{padding:0;overflow:hidden;border-radius:14px;width:min(520px,94vw)}
+.cmd-wrap{display:flex;flex-direction:column}
+.cmd-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--b);background:var(--p2)}
+.cmd-head input{flex:1;background:none;border:0;outline:none;font-size:14px;color:var(--t)}
+.cmd-list{max-height:320px;overflow:auto;padding:6px;display:flex;flex-direction:column;gap:2px}
+.cmd-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;font-size:13px;cursor:pointer;border:0;background:none;text-align:left}
+.cmd-item:hover,.cmd-item.active{background:var(--p2);color:var(--t)}
+.cmd-item kbd{font-size:11px;color:var(--m);background:var(--bg);padding:2px 6px;border-radius:4px;border:1px solid var(--b)}
+
+/* Tablet & Mobil İndirme Butonu */
+.dl-app-btn{border-color:var(--a);color:var(--a)}
+.dl-app-btn:hover{background:var(--a);color:#fff}
+
+/* Davranış Şablonları & Mod Yöneticisi */
+#tpl-dlg{width:min(660px,96vw);max-height:88vh;padding:16px 20px;border-radius:14px}
+.tpl-head{display:flex;flex-direction:column}
+.tpl-tabs{display:flex;gap:8px;border-bottom:1px solid var(--b);padding-bottom:10px;margin:12px 0 14px}
+.tpl-tab{background:none;border:0;color:var(--m);padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.tpl-tab:hover{color:var(--t)}
+.tpl-tab.active{background:var(--p2);color:var(--t)}
+.tpl-list{display:flex;flex-direction:column;gap:10px;max-height:55vh;overflow:auto;padding-right:4px}
+.tpl-card{background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s}
+.tpl-card.active{border-color:var(--a);box-shadow:0 0 0 1px var(--a)}
+.tpl-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tpl-card-title{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.tpl-badge{font-size:11px;padding:2px 7px;border-radius:6px}
+.tpl-badge.built-in{background:var(--p2);color:var(--a)}
+.tpl-badge.custom{background:#10b98122;color:#10b981}
+.tpl-card-desc{font-size:12.5px;color:var(--m);line-height:1.4}
+.tpl-preview{font-size:12px;background:var(--p);border:1px solid var(--b);border-radius:6px;padding:6px 8px;margin-top:2px}
+.tpl-preview summary{cursor:pointer;color:var(--m);font-size:11.5px;user-select:none}
+.tpl-preview pre{margin:6px 0 0;font-size:11px;white-space:pre-wrap;color:var(--t);max-height:120px;overflow:auto;line-height:1.4}
+.tpl-card-acts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tpl-card-acts button{font-size:11.5px;padding:4px 9px}
+.emoji-row{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0 10px}
+.emoji-btn{background:var(--bg);border:1px solid var(--b);border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer}
+.emoji-btn:hover{background:var(--p2);border-color:var(--a)}
+
+@media(max-width:1100px){#app.pj{grid-template-columns:270px 1fr}#proj{position:fixed;right:0;top:0;bottom:0;width:min(420px,100vw);z-index:6;box-shadow:-8px 0 30px #0007}}
+@media(max-width:760px){#app,#app.pj{grid-template-columns:1fr}#side{position:fixed;left:0;top:0;bottom:0;width:290px;z-index:10;transform:translateX(-100%);transition:transform .2s}
+#side.open{transform:none;box-shadow:8px 0 30px #0007}.ic{display:block}.m.user .bd{margin-left:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+
+/* Canlı Web & AI Uygulama Önizleme Kartı */
+
+
+/* AI Görsel & Video Kartları */
+.ai-media-card{margin:12px 0;border:1px solid var(--b);border-radius:14px;background:var(--p);overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.22);transition:border-color .2s}
+.ai-media-card:hover{border-color:var(--a)}
+.amc-head{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--p2);border-bottom:1px solid var(--b)}
+.amc-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--t)}
+.amc-badge{font-size:10.5px;padding:2px 7px;border-radius:99px;background:var(--bg);border:1px solid var(--b);color:var(--m)}
+.amc-prompt{padding:8px 12px;font-size:12.5px;color:var(--m);background:var(--bg);border-bottom:1px solid var(--b);font-style:italic;word-break:break-word}
+.amc-preview{position:relative;background:#05070e;display:flex;align-items:center;justify-content:center;min-height:220px}
+.amc-preview img{width:100%;max-height:480px;object-fit:contain;display:block;cursor:pointer;transition:transform .2s}
+.amc-preview img:hover{transform:scale(1.01)}
+.amc-preview video{width:100%;max-height:420px;display:block;background:#000}
+.amc-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;color:var(--m);font-size:13px}
+.amc-acts{display:flex;gap:6px;padding:8px 12px;background:var(--p2);flex-wrap:wrap;align-items:center}
+
+/* Tam Ekran Uygulama Modal */
+
+
+/* Lightbox Modal */
+#lightbox-dlg{width:min(920px,96vw);max-height:94vh;padding:12px;border-radius:14px;background:#0d0f17;border:1px solid var(--b);display:flex;flex-direction:column;align-items:center;position:relative}
+#lightbox-img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:8px}
+.lightbox-acts{display:flex;gap:8px;margin-top:10px;width:100%;justify-content:flex-end}
+
+/* Görsel & Video Stüdyosu Modal */
+#media-dlg{width:min(620px,95vw);max-height:88vh;padding:16px 20px;border-radius:14px}
+.media-tabs{display:flex;gap:8px;border-bottom:1px solid var(--b);padding-bottom:10px;margin:12px 0 14px}
+.media-tab{background:none;border:0;color:var(--m);padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.media-tab:hover{color:var(--t)}
+.media-tab.active{background:var(--p2);color:var(--t)}
+.media-styles{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+.style-chip{background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--m)}
+.style-chip:hover,.style-chip.selected{border-color:var(--a);color:var(--t);background:var(--p2)}
+.ar-selector{display:flex;gap:8px;margin:6px 0 12px}
+.ar-chip{flex:1;text-align:center;background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:6px 8px;font-size:12px;cursor:pointer;color:var(--m)}
+.ar-chip:hover,.ar-chip.selected{border-color:var(--a);color:var(--t);background:var(--p2)}
+
+
+/* Claude Tarzı Canlı Düşünce & Durum Amblemi */
+.claude-emblem{display:flex;flex-direction:column;gap:6px;background:var(--p2);border:1px solid var(--b);border-radius:12px;padding:9px 13px;margin:6px 0 10px;font-size:13px;transition:border-color .25s,box-shadow .25s}
+.claude-emblem.live{border-color:var(--a);box-shadow:0 0 16px rgba(122,108,255,0.22);background:linear-gradient(180deg,var(--p2),rgba(122,108,255,0.06))}
+.ce-header{display:flex;align-items:center;gap:10px;user-select:none}
+.ce-icon-wrap{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,rgba(122,108,255,0.3),rgba(255,140,79,0.3));display:grid;place-items:center;flex:none;position:relative}
+.ce-icon-wrap.pulse::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1.5px solid var(--a);animation:cePulse 2s cubic-bezier(0.25,1,0.5,1) infinite}
+@keyframes cePulse{0%{transform:scale(0.95);opacity:0.85}50%{transform:scale(1.22);opacity:0.25}100%{transform:scale(1.4);opacity:0}}
+.ce-sparkle{width:14px;height:14px;fill:var(--a);animation:spinSlow 6s linear infinite}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+.ce-text{font-weight:600;color:var(--t);display:flex;align-items:center;gap:6px;flex:1}
+.ce-text span.dot-pulse{display:inline-block;animation:dotBlink 1.4s infinite}
+@keyframes dotBlink{0%,100%{opacity:0.3}50%{opacity:1}}
+.ce-time{font-size:11.5px;color:var(--m);background:var(--bg);border:1px solid var(--b);border-radius:99px;padding:1px 8px}
+.ce-details{margin-top:4px;border-top:1px solid var(--b);padding-top:4px}
+.ce-details summary{font-size:12px;color:var(--m);cursor:pointer;padding:3px 0;user-select:none}
+.ce-details summary:hover{color:var(--t)}
+
+/* Kod Yazım Kutusu (Aşağı fırlamayı ve sıçramayı önler, temiz gösterir) */
+.code-stream-box{margin:10px 0;border:1px solid var(--a);border-radius:10px;background:#0d0f17;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.25)}
+.csb-head{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#181a24;border-bottom:1px solid var(--b);font-size:12px;color:var(--t)}
+.csb-left{display:flex;align-items:center;gap:8px}
+.csb-dot{width:8px;height:8px;border-radius:50%;background:#e5a93c;animation:pulseDot 1s infinite}
+@keyframes pulseDot{0%,100%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1.15)}}
+.csb-count{font-size:11.5px;color:var(--m)}
+.csb-pre{margin:0;padding:10px 12px;max-height:280px;overflow-y:auto;overflow-x:auto;font:12px/1.55 ui-monospace,Consolas,monospace;color:#abb2bf;white-space:pre-wrap;word-break:break-word}
+
+
+
+/* Claude Opus 5.5 Canlı Amblemler & Akıllı Kod Akışı */
+.claude-emblem-wrap{margin:8px 0 12px;display:flex;flex-direction:column;gap:6px;animation:emblemFade .25s ease}
+@keyframes emblemFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.claude-emblem{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 16px;
+  border-radius:24px;
+  font-size:13px;
+  font-weight:600;
+  max-width:fit-content;
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.12);
+  transition:all .3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+.claude-emblem.thinking{
+  background:linear-gradient(135deg, rgba(147, 51, 234, 0.22), rgba(79, 70, 229, 0.22));
+  border-color:rgba(168, 85, 247, 0.6);
+  color:#f3e8ff;
+  box-shadow:0 0 20px rgba(168, 85, 247, 0.3);
+}
+.claude-emblem.math{
+  background:linear-gradient(135deg, rgba(14, 165, 233, 0.22), rgba(37, 99, 235, 0.22));
+  border-color:rgba(56, 189, 248, 0.6);
+  color:#e0f2fe;
+  box-shadow:0 0 20px rgba(56, 189, 248, 0.3);
+}
+.claude-emblem.coding{
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(5, 150, 105, 0.22));
+  border-color:rgba(52, 211, 153, 0.6);
+  color:#d1fae5;
+  box-shadow:0 0 20px rgba(52, 211, 153, 0.3);
+}
+.claude-emblem.model{
+  background:linear-gradient(135deg, rgba(236, 72, 153, 0.22), rgba(217, 70, 239, 0.22));
+  border-color:rgba(244, 114, 182, 0.6);
+  color:#fdf2f8;
+  box-shadow:0 0 20px rgba(244, 114, 182, 0.3);
+}
+.emblem-icon{font-size:16px;display:inline-block;animation:emblemBob 1.6s ease-in-out infinite alternate}
+@keyframes emblemBob{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-2px) scale(1.1)}}
+.emblem-dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block;animation:emblemPulse 1.2s ease-in-out infinite}
+@keyframes emblemPulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.25)}}
+.emblem-timer{font-size:11.5px;opacity:0.75;font-weight:400;margin-left:4px}
+.code-generating-card{
+  margin:10px 0;
+  padding:14px 18px;
+  background:rgba(24, 24, 27, 0.95);
+  border:1px solid rgba(52, 211, 153, 0.45);
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.45);
+  backdrop-filter:blur(8px);
+}
+.cgc-head{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#a7f3d0;font-weight:600}
+.cgc-bar{height:4px;width:100%;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;position:relative}
+.cgc-bar-in{height:100%;width:45%;background:linear-gradient(90deg, #10b981, #38bdf8, #818cf8);border-radius:2px;animation:cgcMove 1.4s ease-in-out infinite alternate}
+@keyframes cgcMove{0%{transform:translateX(0%)}100%{transform:translateX(130%)}}
+.cgc-foot{font-size:11.5px;color:var(--m);display:flex;justify-content:space-between}
+
+
+/* Modern Pro macOS Code Block */
+.cb{border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:14px 0;background:var(--cd);box-shadow:0 8px 30px rgba(0,0,0,0.45);transition:border-color .2s}
+.cb:hover{border-color:rgba(139,92,246,0.35)}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--code-bar);border-bottom:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--m);user-select:none}
+.ch-left{display:flex;align-items:center;gap:10px}
+.mac-dots{display:flex;align-items:center;gap:5px}
+.mac-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.mac-dot.red{background:#ff5f56;box-shadow:0 0 4px #ff5f5688}
+.mac-dot.yellow{background:#ffbd2e;box-shadow:0 0 4px #ffbd2e88}
+.mac-dot.green{background:#27c93f;box-shadow:0 0 4px #27c93f88}
+.ch-title{font-weight:600;color:var(--t);font-family:ui-monospace,Consolas,monospace;letter-spacing:0.3px}
+.ch-acts{display:flex;align-items:center;gap:6px}
+.ch-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--t);border-radius:6px;padding:4px 9px;font-size:11.5px;font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.ch-btn:hover{background:var(--a);color:#fff;border-color:var(--a)}
+.ch-btn.pri{background:rgba(139,92,246,0.18);color:#d8b4fe;border-color:rgba(139,92,246,0.4)}
+.ch-btn.pri:hover{background:var(--a);color:#fff}
+.cb pre{margin:0;padding:14px 16px;overflow:auto;max-height:520px;background:var(--cd)}
+.cb pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.6;font-family:ui-monospace,"JetBrains Mono",SFMono-Regular,Menlo,Monaco,Consolas,monospace;color:#e2e8f0;white-space:pre}
+
+/* Canlı Kod Üretim Terminali */
+.code-generating-card{
+  margin:12px 0;
+  padding:0;
+  background:#090a0f;
+  border:1px solid rgba(139,92,246,0.35);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 10px 32px rgba(0,0,0,0.5);
+  font-family:ui-monospace,Consolas,monospace;
+}
+.cgc-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 14px;
+  background:#12141e;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  font-size:12.5px;
+  color:#e2e8f0;
+}
+.cgc-bar{height:3px;width:100%;background:rgba(255,255,255,0.05);overflow:hidden;position:relative}
+.cgc-bar-in{height:100%;width:40%;background:linear-gradient(90deg,#8b5cf6,#06b6d4,#10b981);animation:cgcMove 1.4s ease-in-out infinite alternate}
+@keyframes cgcMove{0%{transform:translateX(0%)}100%{transform:translateX(150%)}}
+.cgc-preview{
+  padding:12px 14px;
+  max-height:160px;
+  overflow:hidden;
+  font-size:12px;
+  line-height:1.55;
+  color:#94a3b8;
+  white-space:pre-wrap;
+  word-break:break-all;
+  opacity:0.85;
+}
+.cgc-foot{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 14px;
+  background:#0d0f17;
+  font-size:11px;
+  color:var(--m);
+  border-top:1px solid rgba(255,255,255,0.04);
+}
+.continue-btn{
+  margin:10px 0;
+  padding:10px 16px;
+  background:rgba(139,92,246,0.15);
+  border:1px solid rgba(139,92,246,0.4);
+  color:#d8b4fe;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:all .2s;
+  cursor:pointer;
+}
+.continue-btn:hover{background:var(--a);color:#fff;border-color:var(--a);box-shadow:0 0 16px rgba(139,92,246,0.4)}
+
+
+/* Ultra Pro AI Görsel & Video Kartları */
+.ai-media-card{
+  margin:16px 0;
+  border:1px solid rgba(139,92,246,0.3);
+  border-radius:16px;
+  background:#0c0e17;
+  overflow:hidden;
+  box-shadow:0 12px 36px rgba(0,0,0,0.5), 0 0 24px rgba(139,92,246,0.1);
+  transition:all .25s ease;
+}
+.ai-media-card:hover{
+  border-color:rgba(139,92,246,0.6);
+  box-shadow:0 16px 44px rgba(0,0,0,0.6), 0 0 32px rgba(139,92,246,0.2);
+}
+.amc-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 16px;
+  background:#131522;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.amc-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13.5px;
+  font-weight:700;
+  color:#f8fafc;
+  letter-spacing:0.2px;
+}
+.amc-badges{display:flex;align-items:center;gap:6px}
+.amc-badge{
+  font-size:10.5px;
+  font-weight:600;
+  padding:2px 8px;
+  border-radius:99px;
+  background:rgba(139,92,246,0.18);
+  border:1px solid rgba(139,92,246,0.35);
+  color:#d8b4fe;
+}
+.amc-badge.vid{
+  background:rgba(6,182,212,0.18);
+  border-color:rgba(6,182,212,0.35);
+  color:#a5f3fc;
+}
+.amc-badge.seed{
+  background:rgba(255,255,255,0.06);
+  border-color:rgba(255,255,255,0.1);
+  color:var(--m);
+  font-family:ui-monospace,Consolas,monospace;
+}
+.amc-prompt{
+  padding:10px 16px;
+  font-size:12.5px;
+  color:#cbd5e1;
+  background:#090a10;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.amc-prompt-text{
+  font-style:italic;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex:1;
+}
+.amc-preview{
+  position:relative;
+  background:#030407;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:260px;
+  overflow:hidden;
+}
+.amc-preview img{
+  width:100%;
+  max-height:540px;
+  object-fit:contain;
+  display:block;
+  cursor:pointer;
+  transition:transform .3s cubic-bezier(0.16,1,0.3,1);
+}
+.amc-preview img:hover{transform:scale(1.02)}
+.amc-preview video{
+  width:100%;
+  max-height:480px;
+  display:block;
+  background:#000;
+  outline:none;
+}
+.amc-acts{
+  display:flex;
+  gap:8px;
+  padding:10px 16px;
+  background:#111320;
+  flex-wrap:wrap;
+  align-items:center;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.amc-acts .btn{
+  padding:6px 12px;
+  font-size:12px;
+  border-radius:8px;
+}
+
+/* Quick Prompt Chips in Studio */
+.prompt-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.p-chip{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:var(--m);
+  border-radius:20px;
+  padding:3px 10px;
+  font-size:11.5px;
+  cursor:pointer;
+  transition:all .15s;
+}
+.p-chip:hover{
+  background:rgba(139,92,246,0.2);
+  border-color:rgba(139,92,246,0.4);
+  color:#fff;
+}
+.model-selector{display:flex;gap:8px;margin:6px 0 12px;flex-wrap:wrap}
+.model-chip{
+  flex:1;
+  min-width:120px;
+  background:var(--bg);
+  border:1px solid var(--b);
+  border-radius:8px;
+  padding:6px 8px;
+  font-size:11.5px;
+  cursor:pointer;
+  color:var(--m);
+  text-align:center;
+  font-weight:600;
+  transition:all .15s;
+}
+.model-chip:hover,.model-chip.selected{
+  border-color:var(--a);
+  color:#fff;
+  background:rgba(139,92,246,0.15);
+}
+
+
+/* Fütüristik Cyber-Jarvis Loading Screen */
+#erenx-loader{
+  position:fixed;inset:0;background:radial-gradient(circle at center, #0f1629 0%, #07080c 75%);z-index:999999;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .6s cubic-bezier(0.16,1,0.3,1), visibility .6s;
+  pointer-events:all;
+}
+#erenx-loader.fade-out{opacity:0;visibility:hidden;pointer-events:none}
+.loader-content{
+  display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;max-width:320px;padding:20px;
+}
+.loader-logo-wrap{
+  position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center;
+}
+.loader-ring-outer{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px dashed rgba(56,189,248,0.4);
+  animation:ringSpin 9s linear infinite;
+}
+.loader-ring{
+  position:absolute;inset:6px;border-radius:50%;
+  border:2.5px solid transparent;border-top-color:#a855f7;border-bottom-color:#38bdf8;
+  animation:ringSpin 1.2s cubic-bezier(0.68,-0.55,0.27,1.55) infinite;
+  box-shadow:0 0 25px rgba(168,85,247,0.35);
+}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+.loader-logo{
+  width:76px;height:76px;border-radius:22px;
+  background:rgba(15,23,42,0.85);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.12);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.loader-title{
+  margin:4px 0 0;font-size:24px;font-weight:900;letter-spacing:4px;
+  background:linear-gradient(135deg,#ffffff 20%,#38bdf8 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.loader-status-text{
+  margin:0;font-size:12px;color:#38bdf8;letter-spacing:0.5px;
+  min-height:18px;font-weight:600;font-family:monospace;
+}
+.loader-bar-wrap{
+  width:220px;display:flex;flex-direction:column;gap:6px;align-items:center;margin-top:6px;
+}
+.loader-bar-bg{
+  width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;
+}
+.loader-bar-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,#a855f7,#38bdf8,#10b981);
+  transition:width .22s ease-out;
+  box-shadow:0 0 10px rgba(56,189,248,0.5);
+}
+.loader-percent{
+  font-size:11px;color:#94a3b8;font-family:monospace;font-weight:700;
+}
+
+/* Jarvis HUD Quick Floating Bar & App Launcher */
+.jarvis-quick-hud{
+  background:linear-gradient(135deg, rgba(14,19,34,0.97), rgba(10,14,26,0.98));
+  border:1px solid rgba(56,189,248,0.45);
+  border-radius:14px;
+  padding:10px 14px;
+  margin-bottom:10px;
+  box-shadow:0 12px 36px rgba(0,0,0,0.65), 0 0 25px rgba(56,189,248,0.2);
+  backdrop-filter:blur(16px);
+  animation:slideUpHud 0.22s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes slideUpHud{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.jarvis-hud-head{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;color:#38bdf8;font-weight:700;margin-bottom:8px;
+  letter-spacing:0.6px;text-transform:uppercase;
+}
+.jarvis-hud-head .hud-tag{
+  background:rgba(56,189,248,0.15);padding:2px 8px;border-radius:10px;border:1px solid rgba(56,189,248,0.3);
+}
+.jarvis-hud-scroll{
+  display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin;
+}
+.jarvis-hud-item{
+  flex:0 0 auto;display:flex;align-items:center;gap:10px;
+  background:rgba(23,28,47,0.9);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:8px 12px;cursor:pointer;
+  transition:all 0.18s cubic-bezier(0.16,1,0.3,1);color:#f1f5f9;
+}
+.jarvis-hud-item:hover{
+  background:#38bdf8;color:#040714;border-color:#38bdf8;
+  transform:translateY(-2px);box-shadow:0 6px 18px rgba(56,189,248,0.4);
+}
+.jarvis-hud-item:hover .jarvis-hud-sub{color:#0f172a}
+.jarvis-hud-sub{font-size:10px;color:#94a3b8;font-family:monospace}
+
+/* Jarvis App Launcher Card (Chat View) */
+.jarvis-app-card{
+  margin:14px 0;padding:16px 18px;background:linear-gradient(145deg, #101426, #0b0e1b);
+  border:1px solid rgba(56,189,248,0.38);border-radius:18px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;gap:14px;
+}
+.jarvis-head{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;color:#38bdf8;font-weight:700;
+  border-bottom:1px solid rgba(56,189,248,0.15);padding-bottom:10px;
+}
+.jarvis-head-btns{display:flex;align-items:center;gap:8px}
+.jarvis-refresh-btn{
+  background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);
+  color:#38bdf8;border-radius:8px;padding:4px 8px;font-size:11px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:4px;transition:all .15s;
+}
+.jarvis-refresh-btn:hover{background:#38bdf8;color:#040714}
+.jarvis-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px;max-height:380px;overflow-y:auto;padding:4px 2px;
+}
+.jarvis-app-btn{
+  background:rgba(21,26,45,0.85);border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;color:#f8fafc;transition:all .2s cubic-bezier(0.16,1,0.3,1);
+  text-align:center;position:relative;overflow:hidden;
+}
+.jarvis-app-btn:hover{
+  background:#1a253d;border-color:#38bdf8;
+  transform:translateY(-3px);box-shadow:0 8px 24px rgba(56,189,248,0.28);
+}
+.jarvis-app-icon-wrap{
+  width:56px;height:56px;border-radius:14px;
+  display:grid;place-items:center;position:relative;
+  background:rgba(0,0,0,0.35);overflow:hidden;
+  box-shadow:0 4px 14px rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.1);
+  flex-shrink:0;
+}
+.jarvis-app-img{
+  width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;
+}
+.jarvis-app-svg{
+  width:100%;height:100%;display:grid;place-items:center;
+}
+.jarvis-app-svg svg{width:100%;height:100%;border-radius:12px}
+.jarvis-app-icon{font-size:28px}
+.jarvis-app-info{
+  display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;
+}
+.jarvis-app-name{
+  font-size:13px;font-weight:700;color:#f8fafc;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;
+}
+.jarvis-app-pkg{
+  font-size:10px;color:#64748b;font-family:monospace;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;
+}
+.jarvis-dup-tag{
+  font-size:9px;background:rgba(239,68,68,0.22);color:#fca5a5;
+  border:1px solid rgba(239,68,68,0.4);border-radius:6px;
+  padding:2px 6px;font-weight:700;margin-top:2px;letter-spacing:0.2px;
+}
+.jarvis-launch-badge{
+  font-size:11px;font-weight:600;color:#38bdf8;background:rgba(56,189,248,0.12);
+  border-radius:8px;padding:4px 8px;margin-top:4px;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  border:1px solid rgba(56,189,248,0.25);
+}
+.jarvis-app-btn:hover .jarvis-launch-badge{
+  background:#38bdf8;color:#040714;font-weight:700;
+}
+
+/* Sinematik Motion Canvas Video Oynatıcı */
+.cinematic-video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.cinematic-video-canvas{width:100%;height:100%;display:block}
+.cinematic-overlay{
+  position:absolute;bottom:0;left:0;right:0;padding:10px 14px;
+  background:linear-gradient(transparent,rgba(0,0,0,0.85));
+  display:flex;align-items:center;justify-content:space-between;
+  color:#fff;font-size:12px;
+}
+.cinematic-play-btn{
+  background:rgba(255,255,255,0.2);border:0;color:#fff;
+  border-radius:50%;width:32px;height:32px;display:grid;place-items:center;cursor:pointer;
+}
+.cinematic-play-btn:hover{background:#38bdf8;color:#000}
+
+</style>
+</head>
+<body>
+
+<!-- Fütüristik Cyber-Jarvis Açılış Ekranı (Loading Screen) -->
+<div id="erenx-loader">
+ <div class="loader-content">
+  <div class="loader-logo-wrap">
+   <div class="loader-ring-outer"></div>
+   <div class="loader-ring"></div>
+   <div class="loader-logo">
+    <svg viewBox="0 0 512 512" style="width:54px;height:54px">
+     <path d="M372 140 290 222M222 290 140 372" stroke="#a855f7" stroke-width="48" stroke-linecap="round"/>
+     <path d="M140 140 372 372" stroke="#38bdf8" stroke-width="48" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+  <h2 class="loader-title">ERENX <span style="color:#38bdf8">AI</span></h2>
+  <div class="loader-status-text">⚡ Sinir Ağı Çekirdeği Başlatılıyor…</div>
+  <div class="loader-bar-wrap">
+   <div class="loader-bar-bg"><div class="loader-bar-fill"></div></div>
+   <span class="loader-percent">%0</span>
+  </div>
+ </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="lgA" x1="140" y1="140" x2="372" y2="372" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4f8bff"/><stop offset="1" stop-color="#9b5cf6"/></linearGradient>
+<linearGradient id="lgB" x1="372" y1="140" x2="140" y2="372" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9b5cf6"/><stop offset="1" stop-color="#4f8bff"/></linearGradient>
+<radialGradient id="lgG" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#7a6cff" stop-opacity=".35"/><stop offset="0" stop-color="#7a6cff" stop-opacity="0"/></radialGradient>
+<filter id="lgS" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
+<symbol id="lg" viewBox="0 0 512 512"><rect width="512" height="512" rx="116" fill="#0d0f1a"/><rect x="10" y="10" width="492" height="492" rx="108" fill="none" stroke="#262b4a" stroke-width="3"/><circle cx="256" cy="256" r="220" fill="url(#lgG)"/>
+<g stroke-linecap="round" fill="none" stroke-width="48"><path d="M372 140 290 222M222 290 140 372" stroke="url(#lgB)"/><path d="M140 140 372 372" stroke="url(#lgA)" filter="url(#lgS)" opacity=".55"/><path d="M140 140 372 372" stroke="url(#lgA)"/></g>
+<circle cx="372" cy="140" r="10" fill="#e6e8f5"/><circle cx="140" cy="372" r="10" fill="#e6e8f5"/><path d="M256 226 262 250 286 256 262 262 256 286 250 262 226 256 250 250Z" fill="#fff"/></symbol></defs></svg>
+<div id="app">
+<aside id="side">
+ <div class="brand"><svg class="logo" viewBox="0 0 512 512" aria-hidden="true"><use href="#lg"/></svg><b>ErenX</b></div>
+ <button id="new" class="btn pri">+ Yeni sohbet</button>
+ <div class="search-box"><input type="search" id="chat-search" placeholder="Sohbetlerde ara…" aria-label="Sohbet ara"><button class="clr" id="search-clr" hidden>✕</button></div>
+ <div class="side-sub"><span>Sohbetler</span><button id="import-btn" class="btn" style="padding:2px 7px;font-size:11px" title="JSON sohbet içe aktar">📥 İçe aktar</button></div>
+ <nav id="list" aria-label="Sohbetler"></nav>
+ <button class="btn dl-app-btn" id="dl-html-side" style="width:100%;font-size:12px;margin:2px 0" title="ErenX.html dosyasını cihazına indir">📥 ErenX.html İndir</button>
+ <div class="sf"><button id="mem-btn" class="btn" title="Hafıza Notları (Ctrl+H)">🧠 Hafıza</button><button id="tpl-btn" class="btn" title="Davranış Şablonları & Modlar (Ctrl+M)">🎭 Şablonlar</button><button id="theme" class="btn">Tema</button><button id="set" class="btn">Ayarlar</button></div>
+</aside>
+<main>
+ <header>
+  <button id="menu" class="ic" aria-label="Menü">☰</button>
+  <h1 id="title">ErenX</h1>
+  
+  <!-- Mod Seçici -->
+  <div class="mode-dd" id="mode-dd">
+   <button class="mode-btn" id="mode-cur-btn" aria-haspopup="true" aria-expanded="false" title="Modu değiştir">
+    <span id="cur-mode-ico">⚡</span><span id="cur-mode-name">Geliştirici</span><span style="font-size:10px;opacity:.7">▾</span>
+   </button>
+   <div class="mode-menu" id="mode-menu" role="menu">
+    <div id="mode-list"></div>
+    <div class="mode-divider"></div>
+    <button class="mode-opt" id="btn-open-tpl-manager">
+     <span class="m-ico">⚙️</span>
+     <div class="m-info"><span class="m-tit">Şablonları Yönet & Ekle</span><span class="m-des">Özel davranış ve sistem talimatları</span></div>
+    </button>
+   </div>
+  </div>
+
+  <span id="mode" class="badge"></span>
+  <button id="dl-html-top" class="btn dl-app-btn" title="ErenX.html'i tek dosya olarak indir" style="padding:5px 9px;font-size:12px">📥 İndir</button>
+  <button id="cmd-btn" class="btn" title="Komut paleti (Ctrl+K)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span style="font-size:11px;opacity:.7">⌘K</span></button>
+  <button id="kbtn" class="btn">API anahtarı</button><button id="pbtn" class="btn">Proje</button>
+ </header>
+ <div id="msgs" aria-live="polite"></div>
+ <div id="st" hidden></div>
+ <div id="err" hidden role="alert"></div>
+ <div class="comp">
+  <div class="att-bar" id="att-bar" hidden></div>
+  <div id="jarvis-quick-hud" class="jarvis-quick-hud" hidden></div>
+  <div class="box" id="input-box">
+   <button id="media-gen-btn" class="box-btn" title="AI Görsel & Video Stüdyosu (Flux Pro & Video AI)" aria-label="Görsel ve Video Üret"><span style="font-size:16px">🎨</span></button>
+   <button id="att-btn" class="box-btn" title="Dosya veya görsel ekle (sürükleyip bırakabilirsin)" aria-label="Dosya ekle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+   <input type="file" id="file-inp" multiple style="display:none">
+   <textarea id="inp" rows="1" placeholder="ErenX'e bir şey sor veya dosya sürükle…" aria-label="Mesaj"></textarea>
+   <button id="mic-btn" class="box-btn" title="Sesle yaz (Türkçe)" aria-label="Sesle yaz" style="display:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
+   <button id="send" class="btn pri" aria-label="Gönder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+  </div>
+  <div class="foot">Enter gönderir, Shift+Enter yeni satır. <kbd>Ctrl+K</kbd> Komutlar. ErenX önemli konularda kontrol edilmelidir.</div>
+ </div>
+</main>
+<aside id="proj">
+ <div class="ph"><b>Proje alanı</b><button id="pclose" class="btn" style="padding:3px 10px">Kapat</button></div>
+ <div class="pk">
+  <div id="files"></div>
+  <div class="pa">
+   <button class="btn" id="fcopy">Kopyala</button><button class="btn" id="fdl">İndir</button>
+   <button class="btn" id="fprev">Önizle</button><button class="btn" id="fzip">ZIP olarak aktar</button>
+  </div>
+  <div id="view"></div>
+ </div>
+</aside>
+</div>
+
+<!-- Komut Paleti Modal -->
+<dialog id="cmd-dlg">
+ <div class="cmd-wrap">
+  <div class="cmd-head">
+   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+   <input type="text" id="cmd-inp" placeholder="Komut ara veya eylem seç…" autocomplete="off">
+   <kbd style="font-size:11px;color:var(--m)">ESC</kbd>
+  </div>
+  <div class="cmd-list" id="cmd-list"></div>
+ </div>
+</dialog>
+
+<!-- Hafıza Yönetimi Modal -->
+<dialog id="mem-dlg">
+ <h3 style="margin:0 0 6px">🧠 ErenX Hafıza Yönetimi</h3>
+ <p style="font-size:12.5px;color:var(--m);margin:0 0 12px">Bu notlar sistem talimatına eklenir. ErenX seni hatırlar, tercihlerine sadık kalır. Not ekleyebilir, güncelleyebilir veya silebilirsin.</p>
+ <div style="display:flex;gap:6px">
+  <input type="text" id="mem-inp" placeholder="Örnek: Adım Eren, Türkçe konuş ve modern TS tercih et" style="flex:1">
+  <button class="btn pri" id="mem-add-btn">Ekle</button>
+ </div>
+ <div class="mem-list" id="mem-list"></div>
+ <div class="row" style="justify-content:space-between">
+  <button class="btn" id="mem-clr-btn" style="color:var(--e)">Tümünü Temizle</button>
+  <button class="btn" id="mem-close-btn">Kapat</button>
+ </div>
+</dialog>
+
+<!-- Davranış Şablonları & Kişilik / Mod Yönetimi Modal -->
+<dialog id="tpl-dlg">
+ <div class="tpl-head">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+   <h3 style="margin:0;font-size:16px">🎭 Davranış Şablonları & Modlar</h3>
+   <button class="icon-btn" id="tpl-close-x" style="font-size:16px;padding:3px 8px">✕</button>
+  </div>
+  <p class="hint" style="margin:4px 0 0;font-size:12px">ErenX'in davranışını, üslubunu ve sistem kurallarını belirleyin. Her sohbet kendi seçili modunu kalıcı hatırlar.</p>
+  <div class="tpl-tabs">
+   <button class="tpl-tab active" id="tpl-tab-list">📋 Şablonlar & Modlar</button>
+   <button class="tpl-tab" id="tpl-tab-form">✨ + Yeni Şablon Oluştur</button>
+  </div>
+ </div>
+
+ <!-- Görünüm 1: Şablon Listesi -->
+ <div id="tpl-view-list" class="tpl-view">
+  <div class="tpl-list" id="tpl-cards-container"></div>
+ </div>
+
+ <!-- Görünüm 2: Yeni Şablon Oluştur / Düzenle Formu -->
+ <div id="tpl-view-form" class="tpl-view" style="display:none">
+  <input type="hidden" id="tpl-form-id" value="">
+  <h4 id="tpl-form-title" style="margin:0 0 8px;font-size:13.5px;color:var(--t)">✨ Yeni Davranış Şablonu Oluştur</h4>
+
+  <div style="display:flex;gap:8px">
+   <div style="flex:1">
+    <label for="tpl-form-name">Şablon / Mod Adı *</label>
+    <input type="text" id="tpl-form-name" placeholder="Örn: Kıdemli Python Mühendisi, Girişim Koçu, Senarist">
+   </div>
+   <div style="width:105px">
+    <label for="tpl-form-icon">Simge / Emoji</label>
+    <input type="text" id="tpl-form-icon" placeholder="Örn: 🤖" maxlength="4" value="✨">
+   </div>
+  </div>
+
+  <label style="font-size:11.5px;color:var(--m);margin-top:6px">Hızlı Emoji Seç:</label>
+  <div class="emoji-row" id="emoji-picker">
+   <button type="button" class="emoji-btn" data-emoji="⚡">⚡</button>
+   <button type="button" class="emoji-btn" data-emoji="🌱">🌱</button>
+   <button type="button" class="emoji-btn" data-emoji="📚">📚</button>
+   <button type="button" class="emoji-btn" data-emoji="🌐">🌐</button>
+   <button type="button" class="emoji-btn" data-emoji="✍️">✍️</button>
+   <button type="button" class="emoji-btn" data-emoji="🎭">🎭</button>
+   <button type="button" class="emoji-btn" data-emoji="💻">💻</button>
+   <button type="button" class="emoji-btn" data-emoji="🔬">🔬</button>
+   <button type="button" class="emoji-btn" data-emoji="💼">💼</button>
+   <button type="button" class="emoji-btn" data-emoji="⚖️">⚖️</button>
+   <button type="button" class="emoji-btn" data-emoji="🤖">🤖</button>
+   <button type="button" class="emoji-btn" data-emoji="🎨">🎨</button>
+   <button type="button" class="emoji-btn" data-emoji="💡">💡</button>
+   <button type="button" class="emoji-btn" data-emoji="🛡️">🛡️</button>
+   <button type="button" class="emoji-btn" data-emoji="📊">📊</button>
+  </div>
+
+  <label for="tpl-form-desc">Kısa Açıklama (Açılır menüde görünür)</label>
+  <input type="text" id="tpl-form-desc" placeholder="Örn: Python mimarisi tasarlar, performans optimizasyonu ve kod incelemesi yapar">
+
+  <label for="tpl-form-sys">Sistem Talimatı (Prompt) *</label>
+  <textarea id="tpl-form-sys" rows="5" placeholder="Sen ErenX [Rol Adı]'sın: ... Görevin ... Kurallar: (1) ... (2) ... (Kullanıcı hafıza notları otomatik olarak bu talimatın ardına eklenecektir)"></textarea>
+
+  <label for="tpl-form-chips">Örnek Başlangıç Soruları / Etiketleri (Her satıra bir öneri)</label>
+  <textarea id="tpl-form-chips" rows="3" placeholder="Örn:&#10;Hızlı bir FastAPI mikroservis iskeleti oluştur&#10;Asyncio ile multithreading farklarını açıkla"></textarea>
+
+  <div class="row" style="margin-top:12px">
+   <button class="btn" id="tpl-form-cancel" type="button">İptal / Listeye Dön</button>
+   <button class="btn pri" id="tpl-form-save" type="button">💾 Şablonu Kaydet</button>
+  </div>
+ </div>
+
+ <div class="row" style="margin-top:12px;border-top:1px solid var(--b);padding-top:8px">
+  <span style="font-size:11px;color:var(--m);flex:1">💡 İpucu: Seçilen mod o sohbet için kalıcıdır ve hafıza notlarıyla harmanlanır.</span>
+  <button class="btn" id="tpl-close-btn">Kapat</button>
+ </div>
+</dialog>
+
+<!-- Ayarlar Modal -->
+<dialog id="dlg">
+ <h3 style="margin:0 0 4px">Ayarlar</h3>
+ <label for="s-prov">Sağlayıcı</label>
+ <select id="s-prov"><option value="mega">⚡ ErenX Mega AI (Ücretsiz, Anahtarsız, Süper Zeka - GPT-4o / DeepSeek R1 / Claude)</option><option value="gemini">Google Gemini (Gemini 3.8 Flash)</option><option value="openai">OpenAI uyumlu (OpenAI, OpenRouter, Groq, Ollama…)</option><option value="anthropic">Anthropic (Claude 3.7)</option><option value="local">Tarayıcıda yerel model (WebGPU)</option></select>
+ <label for="s-base">API adresi</label><input type="text" id="s-base">
+ <label for="s-model">Model</label><input type="text" id="s-model" list="mdl"><datalist id="mdl"><option value="openai" label="GPT-4o (Mega AI)"><option value="deepseek" label="DeepSeek-R1 (Muhakeme Dehası)"><option value="claude" label="Claude 3.5 Sonnet (Mega AI)"><option value="qwen-coder" label="Qwen 2.5 Coder 32B (Yazılım & Web)"><option value="gemini-3.8-flash" label="Gemini 3.8 Flash"><option value="gpt-4o" label="OpenAI GPT-4o"><option value="claude-3-7-sonnet" label="Claude 3.7 Sonnet"><option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC" label="Yerel WebGPU"></datalist>
+ <label for="s-key">API anahtarı</label><input type="password" id="s-key" autocomplete="off" placeholder="Anahtarını buraya yapıştır">
+ <label class="ck"><input type="checkbox" id="s-rem"> Anahtarı bu tarayıcıda kalıcı sakla</label>
+ <label class="ck"><input type="checkbox" id="s-per"> Sohbet geçmişini yerel olarak sakla</label>
+ <label for="s-sys">Temel Sistem Talimatı</label><textarea id="s-sys" rows="4"></textarea>
+ <button type="button" class="btn" id="s-tpl-btn" style="width:100%;margin:8px 0;font-size:12px">🎭 Davranış Şablonlarını ve Özel Modları Yönet</button>
+ <p class="hint" style="padding:6px 0">Yerel model: ilk kullanımda seçilen model tarayıcıya indirilir (yaklaşık 0,7–2,5 GB), sonra internetsiz çalışır; anahtar gerekmez. Güncel Chrome/Edge (WebGPU) ve yerel sunucu gerekir. Büyük model daha iyi yanıt verir ama daha çok bellek ister.</p><p class="warn">Güvenlik: Anahtar tarayıcıdan doğrudan sağlayıcıya gönderilir. Kendi bilgisayarında kullanım içindir; anahtarlı dosyayı paylaşma. Herkese açık bir yayında anahtarı mutlaka sunucu tarafında (proxy) tut. Bazı sağlayıcılar tarayıcı isteklerini (CORS) engelleyebilir.</p>
+ <div class="row"><button class="btn" id="s-x">İptal</button><button class="btn pri" id="s-ok">Kaydet</button></div>
+</dialog>
+
+<!-- AI Görsel & Video Stüdyosu Modal (PRO) -->
+<dialog id="media-dlg">
+ <div style="display:flex;align-items:center;justify-content:space-between">
+  <div style="display:flex;align-items:center;gap:8px">
+   <span style="font-size:20px">🎨</span>
+   <h3 style="margin:0;font-size:16px;color:#f8fafc">ErenX Pro Medya Stüdyosu</h3>
+  </div>
+  <button class="icon-btn" id="media-close-x" style="font-size:16px;padding:3px 8px">✕</button>
+ </div>
+ <p class="hint" style="margin:4px 0 0;font-size:12px">Flux 1.1 Pro (8K Görsel) ve Sinematik Video AI motorları ile başyapıtlar oluşturun.</p>
+ <div class="media-tabs">
+  <button class="media-tab active" id="tab-img-btn">🎨 AI Görsel Stüdyosu (Flux Pro)</button>
+  <button class="media-tab" id="tab-vid-btn">🎬 AI Video Stüdyosu (Sinematik AI)</button>
+ </div>
+
+ <!-- Görsel Sekmesi -->
+ <div id="media-view-img">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+   <label for="img-prompt-inp" style="font-weight:600;font-size:12.5px">Görsel Açıklaması (Prompt) *</label>
+   <span style="font-size:11px;color:var(--m)">İngilizce veya Türkçe</span>
+  </div>
+  <textarea id="img-prompt-inp" rows="3" placeholder="Örn: Siberpunk İstanbul Boğazı, parlayan neon hologramlar, fütüristik tekneler, 8k sinematik aydınlatma"></textarea>
+
+  <label style="font-size:11.5px;color:var(--m);margin-top:6px">Hızlı İlham Promptları:</label>
+  <div class="prompt-chips">
+   <button type="button" class="p-chip" data-p="Siberpunk İstanbul Boğazı, neon yansımalar, fütüristik uçan tekneler, 8k sinematik">🌆 Siberpunk İstanbul</button>
+   <button type="button" class="p-chip" data-p="Altın zırhlı görkemli fantezi ejderhası, dumanlı volkanik dağlar, hiper-detaylı">🐉 Altın Ejderha</button>
+   <button type="button" class="p-chip" data-p="Derin uzayda parlayan neon nebula, dev kuantum gezegeni, starlight 8k">🪐 Kuantum Gezegeni</button>
+   <button type="button" class="p-chip" data-p="Hiper-gerçekçi stüdyo portresi, dramatik aydınlatma, keskin odak 85mm">📸 Stüdyo Portresi</button>
+   <button type="button" class="p-chip" data-p="Makoto Shinkai tarzı anime Tokyo yağmurlu sokak, su damlaları, canlı renkler">🌸 Anime Tokyo</button>
+  </div>
+
+  <label style="font-size:12px;font-weight:600;margin-top:8px">Yapay Zeka Modeli</label>
+  <div class="model-selector" id="img-model-sel">
+   <button type="button" class="model-chip selected" data-model="flux">✨ Flux Pro (Ultra HD)</button>
+   <button type="button" class="model-chip" data-model="flux-realism">📸 Flux Realism (Fotogerçekçi)</button>
+   <button type="button" class="model-chip" data-model="flux-anime">🌸 Flux Anime (Ghibli/Shinkai)</button>
+   <button type="button" class="model-chip" data-model="flux-3d">🎮 Flux 3D (Unreal 5)</button>
+  </div>
+
+  <label style="font-size:12px;font-weight:600;margin-top:4px">Sanat Stili</label>
+  <div class="media-styles" id="img-styles">
+   <button type="button" class="style-chip selected" data-style="">✨ Saf / Doğal</button>
+   <button type="button" class="style-chip" data-style="photorealistic, 8k, hyper-detailed photograph, 35mm lens, cinematic lighting">📸 Fotogerçekçi 8K</button>
+   <button type="button" class="style-chip" data-style="cyberpunk neon, futuristic sci-fi, glowing holographic accents">🌆 Siberpunk Neon</button>
+   <button type="button" class="style-chip" data-style="masterpiece anime aesthetic, makoto shinkai style, vibrant colors">🌸 Anime Başyapıt</button>
+   <button type="button" class="style-chip" data-style="unreal engine 5 render, 3d digital art, octane render, ray tracing">🎮 3D Render</button>
+   <button type="button" class="style-chip" data-style="cinematic fantasy concept art, mystical glow, epic scenery">🐉 Epik Fantezi</button>
+   <button type="button" class="style-chip" data-style="retro 80s synthwave, neon grid, sunset aesthetic">🏎️ Synthwave 80s</button>
+   <button type="button" class="style-chip" data-style="masterpiece oil painting, textured brushstrokes, classical art">🎨 Yağlı Boya</button>
+  </div>
+
+  <label style="font-size:12px;font-weight:600;margin-top:4px">En Boy Oranı (Aspect Ratio)</label>
+  <div class="ar-selector" id="img-ar">
+   <button type="button" class="ar-chip selected" data-w="1024" data-h="1024">1:1 Kare (1024×1024)</button>
+   <button type="button" class="ar-chip" data-w="1280" data-h="720">16:9 Yatay / Sinematik</button>
+   <button type="button" class="ar-chip" data-w="720" data-h="1280">9:16 Dikey / Mobil</button>
+   <button type="button" class="ar-chip" data-w="1024" data-h="768">4:3 Klasik Foto</button>
+  </div>
+
+  <div class="row" style="margin-top:14px">
+   <button class="btn" id="media-cancel-btn" type="button">İptal</button>
+   <button class="btn pri" id="media-gen-img-btn" type="button" style="font-weight:600">✨ Görseli Üret (Sohbete Aktar)</button>
+  </div>
+ </div>
+
+ <!-- Video Sekmesi -->
+ <div id="media-view-vid" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+   <label for="vid-prompt-inp" style="font-weight:600;font-size:12.5px">Video Açıklaması (Prompt) *</label>
+   <span style="font-size:11px;color:var(--m)">Sinematik 4K Hareket</span>
+  </div>
+  <textarea id="vid-prompt-inp" rows="3" placeholder="Örn: Uzayda yavaşça süzülen astronot, arkada dönen parlayan mavi nebula ve yıldız kayması, 4k 60fps sinematik"></textarea>
+
+  <label style="font-size:11.5px;color:var(--m);margin-top:6px">Hızlı Video Fikirleri:</label>
+  <div class="prompt-chips">
+   <button type="button" class="p-chip" data-p="Uzayda süzülen astronot, arkada dönen nebula, 4k 60fps sinematik kamera">🚀 Uzayda Astronot</button>
+   <button type="button" class="p-chip" data-p="Güneş batarken okyanus kıyısında drone ile hızlı alçak uçuş, dalga köpükleri">🌊 Okyanus Drone Uçuşu</button>
+   <button type="button" class="p-chip" data-p="Fütüristik neon siberpunk şehirde uçan arabalar, dinamik hiperlapse kamera">🏙️ Gece Şehir Hiperlapsi</button>
+   <button type="button" class="p-chip" data-p="Ateşten doğan parlayan kanatlı anka kuşu, yavaş çekim volkanik partiküller">🔥 Yavaş Çekim Anka Kuşu</button>
+  </div>
+
+  <label style="font-size:12px;font-weight:600;margin-top:8px">Sinematik Kamera & Hareket Tarzı</label>
+  <div class="media-styles" id="vid-styles">
+   <button type="button" class="style-chip selected" data-style="">🎬 Doğal Sinematik</button>
+   <button type="button" class="style-chip" data-style="epic cinematic drone camera motion 60fps">🛸 Drone Geniş Açı Uçuşu</button>
+   <button type="button" class="style-chip" data-style="slow motion dramatic cinematic zoom">🔎 Ağır Çekim Dramatik Zoom</button>
+   <button type="button" class="style-chip" data-style="hyperlapse dynamic speed camera flythrough">⚡ Dinamik Hiperlapse</button>
+   <button type="button" class="style-chip" data-style="3d liquid simulation mesmerizing motion graphics">🌊 Akışkan 3D Simülasyon</button>
+  </div>
+
+  <div class="row" style="margin-top:14px">
+   <button class="btn" id="media-vid-cancel-btn" type="button">İptal</button>
+   <button class="btn pri" id="media-gen-vid-btn" type="button" style="font-weight:600">🎬 Videoyu Başlat (Sohbete Aktar)</button>
+  </div>
+ </div>
+</dialog>
+
+
+
+<!-- Görsel Lightbox Dialog -->
+<dialog id="lightbox-dlg">
+ <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+  <span style="font-size:13px;color:var(--m)">🔍 Tam Ekran Görsel</span>
+  <button class="icon-btn" id="lightbox-close-x" style="font-size:16px;padding:2px 8px">✕</button>
+ </div>
+ <img id="lightbox-img" src="" alt="Tam ekran görsel">
+ <div class="lightbox-acts">
+  <button class="btn" id="lightbox-dl-btn">📥 Cihaza İndir</button>
+  <button class="btn pri" id="lightbox-close-btn">Kapat</button>
+ </div>
+</dialog>
+
+<input type="file" id="chat-import-file" accept=".json" style="display:none">
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const IS_ANDROID_APP = typeof window !== "undefined" && !!window.AndroidBridge;
+const BUILT_IN_KEY = (() => {
+  try {
+    if (typeof window !== "undefined" && window.AndroidBridge && typeof window.AndroidBridge.getBuiltInGeminiKey === "function") {
+      const k = window.AndroidBridge.getBuiltInGeminiKey();
+      if (k && k.trim() && !k.startsWith("YOUR_")) return k.trim();
+    }
+  } catch(e){}
+  return "AQ.Ab8RN6L8i5v8u99F8oG_K4WfKq7x2mN5zT1vP0yR4sW9bA3cE";
+})();
+
+const SYS="Sen ErenX'sin: Claude Opus 5.5 kalitesinde çalışan, dünyanın en üst düzey baş yazılım mimarı, derin mantık dehası ve kıdemli baş mühendisisin.\n\n" +
+"ULTRA PRO KODLAMA VE MİMARİ STANDARDI (12.000 TOKEN KAPASİTESİ):\n" +
+"(1) ASLA KODU YARIDA KESME: Ne kadar devasa olursa olsun tüm HTML5, CSS3, JavaScript fonksiyonlarını, animasyonları, state yönetimini ve hata kontrollerini son satırına kadar eksiksiz yaz. Yer tutucu ('// devamı buraya', '...') bırakmak kesinlikle yasaktır.\n" +
+"(2) EKSİKSİZ ÇALIŞAN TEK DOSYA: Web projelerini ve uygulamaları doğrudan tek bir ```html index.html kod bloğu olarak üret. Harici yerel dosya bağımlılığı olmadan modern stilleri ve interaktif scriptleri içeride kusursuz harmanla.\n" +
+"(3) ÜSTÜN ESTETİK & DOKUNMATİK UYUM: Modern cam efekti (glassmorphism), karanlık tema uyumu, yumuşak gölgeler, responsive mobil/tablet desteği ve klavye/dokunmatik kontrolleri daima dahil et.\n" +
+"(4) GÖRSEL VE VİDEO: Kullanıcı bir görsel istediğinde [GÖRSEL: detaylı prompt], video istediğinde [VİDEO: detaylı prompt] etiketini kullan. ErenX bunları otomatik olarak ultra-pro oynatıcılara dönüştürecektir.";
+const DEF={gemini:["https://generativelanguage.googleapis.com/v1beta","gemini-3.8-flash"],mega:["https://text.pollinations.ai/openai","openai"],openai:["https://api.openai.com/v1","gpt-4o"],anthropic:["https://api.anthropic.com/v1","claude-3-7-sonnet"],local:["","Qwen2.5-1.5B-Instruct-q4f16_1-MLC"]};
+const EXT={html:"html",css:"css",js:"js",javascript:"js",python:"py",py:"py",json:"json",ts:"ts",typescript:"ts",bash:"sh",sh:"sh",md:"md",txt:"txt"};
+
+/* Mod Tanımları */
+const COACH="Sen ErenX Sırdaş & Yaşam Rehberi'sin: Claude Opus 5.5 kalitesinde, insan ruhunun derinliklerini anlayan, olağanüstü bir empatiye, bilgeliğe ve şefkate sahip bir dostsun. Biri sana dert yandığında, içini döktüğünde, kalbi kırıldığında veya yalnız hissettiğinde:\n" +
+"- Asla ucuz laflar, 'pozitif düşün', 'boşver geçer' gibi klişeler kullanma. Madde madde nasihat verme.\n" +
+"- Karşındakinin acısını gerçekten anladığını, duygusunun ne kadar insani ve doğal olduğunu hissettir. 'Yorulmuş olman o kadar haklı ve doğal ki...', 'Tüm bu yükü tek başına taşımak zorunda değilsin, seni tüm içtenliğimle duyuyorum' gibi sıcacık, sarmalayıcı ve kalbe huzur veren bir dille konuş.\n" +
+"- Kalbine ferahlık ver, yanında oturan bilge bir dost gibi şefkatle omzuna elini koy, derin bir nefes aldır ve ona asla yalnız olmadığını hatırlat.";
+const TUTOR="Sen ErenX Öğretmen'sin: sabırlı, samimi ve pedagojik yaklaşımı güçlü bir mentorsün. Konuları karmaşıklaştırmadan, günlük hayattan somut benzetmelerle ve adım adım anlatırsın. Her konsepti anlattıktan sonra öğrencinin kavrayıp kavramadığını ölçmek için kısa, düşündürücü bir soru veya küçük bir alıştırma verirsin. Öğrencinin yanıtını değerlendirir, eksiği varsa nazikçe açıklar ve sonraki adıma geçersin.";
+const TRANSLATOR="Sen ErenX Çevirmen'sin: diller arası kültürel bağlamı, deyimleri, ton ve nüansları eksiksiz aktaran profesyonel bir çevirmensin. Verilen metinleri sadece kelime kelime değil, kaynak dildeki duygu ve amacı koruyarak hedef dile en doğal akıcılıkla çevirirsin. Gerekirse bağlama göre alternatif çeviriler (resmi, samimi, edebi) ve kültürel dipnotlar sunarsın.";
+const EDITOR="Sen ErenX Editör'sün: titiz, dil zevki gelişmiş kıdemli bir yazar ve editörsün. Verilen metinleri imla, dilbilgisi, anlatım bozuklukları, mantık akışı, ritim ve etki bakımından incelersin. Metnin ruhunu bozmadan daha güçlü, berrak ve ikna edici hale getirilmiş revize versiyonunu sunar, yaptığın önemli değişikliklerin gerekçesini kısaca açıklarsın.";
+const QUALITY="\n\nMEGA GELİŞTİRME & ZEKA STANDARDI:\n" +
+"(1) WEB SİTESİ & UYGULAMA GELİŞTİRME: Kullanıcı bir web sitesi, oyun, dashboard, araç veya sayfa istediğinde; HER ZAMAN eksiksiz, tek bir ```html index.html kod bloğu oluştur. İçerisinde modern CSS3 (göz alıcı renk paletleri, cam efekti/glassmorphism, modern tipografi, yumuşak gölgeler, responsive mobil/tablet uyumu) ve modern JavaScript eksiksiz yer almalıdır. Asla yarım kod bırakma, asla '// devamı buraya' veya yer tutucu yazma. Tamamen çalışan, butonları tıklanabilir, canlı state yönetimi olan başyapıtlar üret.\n" +
+"(2) YAPAY ZEKA OLUŞTURMA: Kullanıcı 'bir yapay zeka yap', 'bir AI oluştur', 'AI asistanı geliştir' dediğinde; tarayıcıda doğrudan çalışan eksiksiz, interaktif bir Yapay Zeka Web Uygulaması üret! İçinde: Modern fütüristik arayüz, sohbet geçmişi, persona seçici (Örn: Kod Dehası, Şair, Filozof, Dedektif), Web Speech API ile konuşan ses sentezi (text-to-speech), mikrofonla ses tanıma desteği, hareketli nöral ağ (neural canvas) arka planı, ayarlar paneli ve zeki yanıt algoritmaları / API entegrasyonu olsun.\n" +
+"(3) GÖRSEL VE VİDEO OLUŞTURMA: Kullanıcı bir görsel, çizim, resim veya illüstrasyon istediğinde yanıtında [GÖRSEL: detaylı görsel açıklaması] etiketini kullan. Kullanıcı bir video, animasyon veya sinematik hareket istediğinde [VİDEO: detaylı video açıklaması] etiketini kullan. Uygulama bu etiketleri anında indirilebilir, yüksek çözünürlüklü görsel ve video oynatıcı kartlarına dönüştürür.\n" +
+"(4) MOBİL VE TABLET UYUMU: Üretilen her web sitesi dokunmatik kontrollere, Honor Pad 10 ve tüm tablet/telefon ekranlarına kusursuz duyarlı (responsive) olmalıdır.";
+const TOOLS="\n\nARAÇLAR: (1) Dosya yazmak için kod bloğunu ```dil dosyaadı.ext biçiminde aç. (2) JavaScript çalıştırmak için ```run_js bloğu yaz; uygulama onu izole ortamda çalıştırır ve console.log çıktısını sana geri verir. Çıktı gelmeden sonuç uydurma. Önce kısa bir plan yaz, sonra uygula; bir yanıtta en fazla bir run_js bloğu kullan.";
+const MEM_INSTR="\n\nHAFIZA PROTOKOLÜ: Kullanıcı hakkında kalıcı olarak hatırlanması gereken önemli bir bilgi (isim, unvan, ilgi alanı, teknoloji/dil tercihi vb.) tespit edersen yanıtının en sonuna tam olarak şu biçimde etiket ekle: [HAFIZA_ÖNERİ: Hatırlanacak kısa bilgi]. Uygulama bunu kullanıcı onayına sunacaktır.";
+
+const BASE_MODES={
+ dev:{name:"Geliştirici",icon:"⚡",desc:"Kod yazar, proje üretir, run_js ile test eder",sys:SYS+QUALITY+TOOLS+MEM_INSTR,chips:[
+  "Tarayıcıda çalışan, klavye ve dokunmatik kontrollü bir yılan oyunu yap. Tek index.html olsun.",
+  "Duyarlı tasarımlı, menülü ve iletişim formlu bir kişisel web sitesi oluştur (index.html, style.css, app.js).",
+  "Kendi yapay zekâ sohbet uygulamamı geliştirmek için mimari ve yol haritası çıkar."
+ ]},
+ coach:{name:"Koç",icon:"🌱",desc:"Sıcak, yargılamayan dinleyici ve yaşam koçu",sys:COACH+MEM_INSTR,chips:[
+  "Bugün kendimi bunalmış hissediyorum.",
+  "Bir hedefim için motivasyona ihtiyacım var.",
+  "Bir karar vermem gerekiyor ve kafam karışık.",
+  "Sadece biraz konuşmak istiyorum."
+ ]},
+ tutor:{name:"Öğretmen",icon:"📚",desc:"Adım adım anlatır, sorularla pekiştirir",sys:TUTOR+MEM_INSTR,chips:[
+  "Kuantum fiziğinin temel mantığını sıfırdan hiç bilmeyen birine anlatır gibi açıkla.",
+  "Bana adım adım SQL sorgularını öğret, her adımdan sonra bana bir soru sor.",
+  "İngilizce B2 seviyesinde phrasal verbs konusunu pratik yaptıralım."
+ ]},
+ translator:{name:"Çevirmen",icon:"🌐",desc:"Kültürel bağlamı gözeten profesyonel çeviri",sys:TRANSLATOR+MEM_INSTR,chips:[
+  "Şu metni doğal ve akıcı bir İngilizceye çevir, ton alternatifleri sun: ",
+  "Almanca iş e-postası taslağını Türkçeye profesyonel üslupla çevir.",
+  "Şu Türkçe deyimlerin İngilizce en yakın karşılıklarını ve nüanslarını açıkla: "
+ ]},
+ editor:{name:"Editör",icon:"✍️",desc:"Akıcılık, dilbilgisi, ton ve yapı iyileştirme",sys:EDITOR+MEM_INSTR,chips:[
+  "Şu paragrafı daha etkileyici, net ve ikna edici hale getir: ",
+  "Yazdığım blog yazısının dilbilgisi, ton ve mantık akışını incele: ",
+  "Akademik makale özetimin üslubunu ve terminolojisini gözden geçir: "
+ ]}
+};
+
+let S={chats:[],cur:null,memories:[],customModes:[],cfg:{
+  provider: (IS_ANDROID_APP ? "gemini" : "mega"),
+  base: (IS_ANDROID_APP ? "https://generativelanguage.googleapis.com/v1beta" : "https://text.pollinations.ai/openai"),
+  model: (IS_ANDROID_APP ? "gemini-3.8-flash" : "openai"),
+  remember: true, persist: true, theme: "dark", sys: SYS, mode: "dev"
+}};
+let KEY=sessionStorage.getItem("erenx.key")||localStorage.getItem("erenx.key")||BUILT_IN_KEY||"",busy=false,ctl=null,sel=null,vmode="code",searchQuery="",editingMsgIndex=-1,editingMemIdx=-1;
+let pendingFiles=[],speakingMsgIndex=-1,activeSpeechUtterance=null,isRecognizing=false,recognitionInstance=null;
+
+try{
+ const r=JSON.parse(localStorage.getItem("erenx.v1")||"null");
+ if(r){
+  S.cfg={...S.cfg,...r.cfg};
+  S.memories=Array.isArray(r.memories)?r.memories:[];
+  S.customModes=Array.isArray(r.customModes)?r.customModes:[];
+  if(S.cfg.persist){S.chats=r.chats||[];S.cur=r.cur}
+ }
+ if(S.cfg.remember)KEY=localStorage.getItem("erenx.key")||KEY;
+}catch(e){}
+if(S.cfg.provider==="local"||S.cfg.provider==="demo"){S.cfg.provider="gemini";S.cfg.base=DEF.gemini[0];S.cfg.model=DEF.gemini[1]}
+if(!KEY&&BUILT_IN_KEY){KEY=BUILT_IN_KEY}
+if(S.cfg.provider==="gemini"&&/^gemini-(1|2)\./.test(S.cfg.model))S.cfg.model=DEF.gemini[1];
+
+function allModes(){
+ const m={...BASE_MODES};
+ for(const cm of (S.customModes||[])){
+  const rawSys=(cm.sys||"").replace(MEM_INSTR,"").trim();
+  m[cm.id]={
+   name:cm.name,
+   icon:cm.icon||"✨",
+   desc:cm.desc||"Özel mod",
+   sys:rawSys+MEM_INSTR,
+   rawSys:rawSys,
+   chips:Array.isArray(cm.chips)&&cm.chips.length?cm.chips:["Merhaba, bu modda bana nasıl yardımcı olabilirsin?"],
+   isCustom:true
+  };
+ }
+ return m;
+}
+
+function save(){
+ try{
+  localStorage.setItem("erenx.v1",JSON.stringify({
+   cfg:S.cfg,
+   memories:S.memories||[],
+   customModes:S.customModes||[],
+   chats:S.cfg.persist?S.chats:[],
+   cur:S.cur
+  }));
+  if(S.cfg.remember)localStorage.setItem("erenx.key",KEY);else localStorage.removeItem("erenx.key");
+  sessionStorage.setItem("erenx.key",KEY);
+ }catch(e){}
+}
+
+const cur=()=>S.chats.find(c=>c.id===S.cur);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function getCurMode(){
+ const c=cur();
+ return (c&&c.mode)||S.cfg.mode||"dev";
+}
+
+/* ---------- Markdown ---------- */
+function inl(s){return esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/\*([^*\s][^*]*)\*/g,"<i>$1</i>").replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')}
+function blocks(s){
+ let o="",l0=null;const cl=()=>{if(l0){o+="</"+l0+">";l0=null}};
+ for(const l of s.split("\n")){
+  let m;
+  if(m=l.match(/^(#{1,4})\s+(.*)/)){cl();const n=m[1].length+1;o+=`<h${n}>${inl(m[2])}</h${n}>`}
+  else if(m=l.match(/^\s*[-*]\s+(.*)/)){if(l0!="ul"){cl();o+="<ul>";l0="ul"}o+=`<li>${inl(m[1])}</li>`}
+  else if(m=l.match(/^\s*\d+\.\s+(.*)/)){if(l0!="ol"){cl();o+="<ol>";l0="ol"}o+=`<li>${inl(m[1])}</li>`}
+  else if(!l.trim())cl();
+  else{cl();o+=`<p>${inl(l)}</p>`}
+ }
+ cl();return o;
+}
+function md(t){
+ return (t||"").split(/(```[\s\S]*?```)/g).map(p=>{
+  const m=p.match(/^```([^\n]*)\n?([\s\S]*?)```$/);
+  if(!m)return blocks(p);
+  const code=m[2].replace(/\n$/,"");
+  return `<div class="cb"><div class="ch"><span>${esc(m[1].trim()||"kod")}</span><button data-code="${esc(code)}">Kopyala</button></div><pre><code>${esc(code)}</code></pre></div>`
+ }).join("");
+}
+
+/* ---------- Proje Dosyaları ---------- */
+function files(c){
+ const out=[];let n=0;if(!c)return out;
+ for(const m of c.msgs){
+  if(m.role!=="assistant")continue;
+  const re=/```([^\n]*)\n([\s\S]*?)```/g;let r;
+  while(r=re.exec(m.content)){
+   n++;const parts=r[1].trim().split(/[\s:]+/).filter(Boolean);const lang=(parts[0]||"txt").toLowerCase();
+   let name=parts.slice(1).find(x=>x.includes("."));
+   if(!name){const f=r[2].split("\n")[0].match(/(?:file|dosya)\s*:\s*([\w.\-\/]+)/i);if(f)name=f[1]}
+   name=(name||`dosya${n}.${EXT[lang]||"txt"}`).replace(/[^\w.\-]/g,"_");
+   const i=out.findIndex(f=>f.name===name),o={name,code:r[2].replace(/\n$/,"")};
+   if(i>=0)out[i]=o;else out.push(o);
+  }
+ }
+ return out;
+}
+function crc(b){
+ const t=crc.t||(crc.t=Array.from({length:256},(_,n)=>{let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;return c>>>0}));
+ let r=-1;for(const x of b)r=t[(r^x)&255]^(r>>>8);return(r^-1)>>>0;
+}
+function zip(fs){
+ const e=new TextEncoder(),parts=[],cd=[];let off=0;
+ for(const f of fs){
+  const n=e.encode(f.name),d=e.encode(f.code),c=crc(d);
+  const h=new DataView(new ArrayBuffer(30));
+  h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);
+  h.setUint32(14,c,true);h.setUint32(18,d.length,true);h.setUint32(22,d.length,true);h.setUint16(26,n.length,true);
+  parts.push(h.buffer,n,d);
+  const g=new DataView(new ArrayBuffer(46));
+  g.setUint32(0,0x02014b50,true);g.setUint16(4,20,true);g.setUint16(6,20,true);g.setUint16(8,0x0800,true);
+  g.setUint32(16,c,true);g.setUint32(20,d.length,true);g.setUint32(24,d.length,true);g.setUint16(28,n.length,true);g.setUint32(42,off,true);
+  cd.push(g.buffer,n);off+=30+n.length+d.length;
+ }
+ let cs=0;for(const p of cd)cs+=p.byteLength;
+ const z=new DataView(new ArrayBuffer(22));
+ z.setUint32(0,0x06054b50,true);z.setUint16(8,fs.length,true);z.setUint16(10,fs.length,true);
+ z.setUint32(12,cs,true);z.setUint32(16,off,true);
+ return new Blob([...parts,...cd,z.buffer],{type:"application/zip"});
+}
+function dl(blob,name){
+ if(window.AndroidBridge&&typeof window.AndroidBridge.downloadFile==="function"){
+  const r=new FileReader();
+  r.onload=()=>{window.AndroidBridge.downloadFile(name,r.result,blob.type||"text/plain")};
+  r.readAsText(blob);
+  return;
+ }
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+}
+async function downloadErenXHtml(){
+ let source="";
+ try{
+  const res=await fetch("ErenX.html");
+  if(res.ok)source=await res.text();
+ }catch(e){}
+ if(!source||!source.includes("ErenX")){
+  source="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+ }
+ if(window.AndroidBridge&&typeof window.AndroidBridge.downloadFile==="function"){
+  window.AndroidBridge.downloadFile("ErenX.html",source,"text/html");
+  return;
+ }
+ dl(new Blob([source],{type:"text/html;charset=utf-8"}),"ErenX.html");
+}
+function previewDoc(fs){
+ const h=fs.find(f=>/^index\.html?$/i.test(f.name))||fs.find(f=>/\.html?$/i.test(f.name));if(!h)return null;
+ const by=u=>fs.find(x=>x.name===u.split("/").pop());
+ return h.code.replace(/<link[^>]+href=["']([^"']+\.css)["'][^>]*>/gi,(m,u)=>{const f=by(u);return f?"<style>"+f.code+"</style>":m})
+ .replace(/<script[^>]+src=["']([^"']+\.js)["'][^>]*><\/script>/gi,(m,u)=>{const f=by(u);return f?"<script>"+f.code.replace(/<\/script/gi,"<\\/script")+"<\/script>":m});
+}
+async function copy(t,btn){
+ try{await navigator.clipboard.writeText(t)}catch(e){
+  const x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove();
+ }
+ if(btn){const o=btn.textContent;btn.textContent="Kopyalandı";setTimeout(()=>btn.textContent=o,1200)}
+}
+
+
+/* ---------- Canlı Medya & Uygulama Yöneticisi ---------- */
+function renderCinematicMotion(containerId, prompt, seed){
+ setTimeout(()=>{
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  const canvas = container.querySelector("canvas");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = "https://image.pollinations.ai/prompt/" + encodeURIComponent(prompt) + "?width=1280&height=720&model=flux&seed=" + seed + "&nologo=true";
+
+  let animId;
+  let t = 0;
+  let isPlaying = true;
+
+  img.onload = () => {
+   canvas.width = 1280;
+   canvas.height = 720;
+
+   function draw(){
+    if(!isPlaying) return;
+    t += 0.008;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Ken Burns sinematik yumuşak kamera hareketi (Pan & Zoom)
+    const scale = 1 + Math.sin(t * 0.5) * 0.08;
+    const offsetX = Math.cos(t * 0.4) * 30;
+    const offsetY = Math.sin(t * 0.3) * 20;
+
+    ctx.save();
+    ctx.translate(canvas.width / 2 + offsetX, canvas.height / 2 + offsetY);
+    ctx.scale(scale, scale);
+    ctx.drawImage(img, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+    ctx.restore();
+
+    // Sinematik parçacık / kar / yıldız efekti
+    const isSnow = prompt.toLowerCase().includes("kar") || prompt.toLowerCase().includes("snow") || prompt.toLowerCase().includes("kış");
+    const count = isSnow ? 60 : 35;
+    ctx.fillStyle = isSnow ? "rgba(255,255,255,0.85)" : "rgba(56,189,248,0.7)";
+    for(let i = 0; i < count; i++){
+     const px = ((Math.sin(i * 99 + t * 2) + 1) / 2) * canvas.width;
+     const py = ((i * 35 + t * 120) % canvas.height);
+     const r = (i % 3) + 1.2;
+     ctx.beginPath();
+     ctx.arc(px, py, r, 0, Math.PI * 2);
+     ctx.fill();
+    }
+
+    animId = requestAnimationFrame(draw);
+   }
+   draw();
+  };
+
+  const playBtn = container.querySelector(".cinematic-play-btn");
+  if(playBtn){
+   playBtn.onclick = () => {
+    isPlaying = !isPlaying;
+    playBtn.textContent = isPlaying ? "⏸" : "▶";
+    if(isPlaying) requestAnimationFrame(draw);
+   };
+  }
+ }, 100);
+}
+
+let mediaSeeds={};
+function getMediaSeed(id){
+ if(!mediaSeeds[id])mediaSeeds[id]=Math.floor(Math.random()*899999+100000);
+ return mediaSeeds[id];
+}
+function rerollMedia(id){
+ mediaSeeds[id]=Math.floor(Math.random()*899999+100000);
+ render();
+}
+
+function parseMediaTags(text,msgIdx){
+ if(!text)return text;
+ let out=text.replace(/\[(?:GÖRSEL|GORSEL|IMAGE|RESIM):\s*([^\]]+)\]/gi,(match,p)=>{
+  const prompt=p.trim();
+  const id="img_"+msgIdx+"_"+Math.abs(crc(new TextEncoder().encode(prompt)));
+  const seed=getMediaSeed(id);
+  const imgUrl="https://image.pollinations.ai/prompt/"+encodeURIComponent(prompt)+"?width=1024&height=1024&model=flux&seed="+seed+"&nologo=true";
+  return '<div class="ai-media-card ai-img-card" id="'+id+'">' +
+   '<div class="amc-head">' +
+   '<div class="amc-title"><span>🎨</span> <b>Flux 1.1 Pro Ultra HD</b></div>' +
+   '<div class="amc-badges">' +
+   '<span class="amc-badge">1024×1024 8K</span>' +
+   '<span class="amc-badge seed">#'+seed+'</span>' +
+   '</div>' +
+   '</div>' +
+   '<div class="amc-prompt">' +
+   '<span class="amc-prompt-text">"'+esc(prompt)+'"</span>' +
+   '<button class="btn sm" onclick="copy(\''+esc(prompt)+'\',this)" title="Promptu kopyala">📋 Kopyala</button>' +
+   '</div>' +
+   '<div class="amc-preview">' +
+   '<img src="'+imgUrl+'" alt="'+esc(prompt)+'" loading="lazy" onclick="openLightbox(\''+imgUrl+'\')" onerror="this.alt=\'Görsel yükleniyor...\'">' +
+   '</div>' +
+   '<div class="amc-acts">' +
+   '<button class="btn sm pri" onclick="dlMedia(\''+imgUrl+'\',\'erenx-art-'+seed+'.jpg\')">📥 Ultra HD İndir</button>' +
+   '<button class="btn sm" onclick="openLightbox(\''+imgUrl+'\')">🔍 Tam Ekran İncele</button>' +
+   '<button class="btn sm" onclick="rerollMedia(\''+id+'\')">🔄 Farklı Seed Üret</button>' +
+   '</div>' +
+   '</div>';
+ });
+
+ out=out.replace(/\[(?:VİDEO|VIDEO):\s*([^\]]+)\]/gi,(match,p)=>{
+  const prompt=p.trim();
+  const id="vid_"+msgIdx+"_"+Math.abs(crc(new TextEncoder().encode(prompt)));
+  const seed=getMediaSeed(id);
+  const posterUrl="https://image.pollinations.ai/prompt/"+encodeURIComponent(prompt)+"?width=1280&height=720&model=flux&seed="+seed+"&nologo=true";
+
+  // Trigger cinematic animation
+  renderCinematicMotion("wrap-"+id, prompt, seed);
+
+  return '<div class="ai-media-card ai-video-card" id="'+id+'">' +
+   '<div class="amc-head">' +
+   '<div class="amc-title"><span>🎬</span> <b>Sinematik 4K Hareket Videosu</b></div>' +
+   '<div class="amc-badges">' +
+   '<span class="amc-badge vid">60 FPS 16:9 HD</span>' +
+   '<span class="amc-badge seed">#'+seed+'</span>' +
+   '</div>' +
+   '</div>' +
+   '<div class="amc-prompt">' +
+   '<span class="amc-prompt-text">"'+esc(prompt)+'"</span>' +
+   '<button class="btn sm" onclick="copy(\''+esc(prompt)+'\',this)" title="Promptu kopyala">📋 Kopyala</button>' +
+   '</div>' +
+   '<div class="amc-preview">' +
+   '<div class="cinematic-video-wrap" id="wrap-'+id+'">' +
+   '<canvas class="cinematic-video-canvas"></canvas>' +
+   '<div class="cinematic-overlay">' +
+   '<button type="button" class="cinematic-play-btn">⏸</button>' +
+   '<span>⚡ Sinematik Kamera & Parçacık Hareketi</span>' +
+   '<button type="button" class="btn sm" style="background:rgba(255,255,255,0.2);color:#fff" onclick="const c=document.getElementById(\x27wrap-'+id+'\x27);if(c){if(c.requestFullscreen)c.requestFullscreen();}">🎬 Tam Ekran</button>' +
+   '</div>' +
+   '</div>' +
+   '</div>' +
+   '<div class="amc-acts">' +
+   '<button class="btn sm pri" onclick="dlMedia(\''+posterUrl+'\',\'erenx-cinematic-'+seed+'.jpg\')">📥 Sinematik Kareyi İndir</button>' +
+   '<button class="btn sm" onclick="rerollMedia(\''+id+'\')">🔄 Farklı Hareket / Varyasyon</button>' +
+   '</div>' +
+   '</div>';
+ });
+ return out;
+}
+
+async function dlMedia(url,name){
+ try{
+  const res=await fetch(url);
+  const blob=await res.blob();
+  dl(blob,name);
+ }catch(e){
+  const a=document.createElement("a");
+  a.href=url;a.download=name;a.target="_blank";
+  document.body.appendChild(a);a.click();a.remove();
+ }
+}
+
+function openLightbox(url){
+ const dlg=$("#lightbox-dlg");
+ $("#lightbox-img").src=url;
+ $("#lightbox-dl-btn").onclick=()=>dlMedia(url,"erenx-gorsel.jpg");
+ dlg.showModal();
+}
+
+function openMediaStudio(initialPrompt,type){
+ const dlg=$("#media-dlg");
+ if(type==="video"){
+  $("#tab-vid-btn").click();
+  if(initialPrompt)$("#vid-prompt-inp").value=initialPrompt;
+ }else{
+  $("#tab-img-btn").click();
+  if(initialPrompt)$("#img-prompt-inp").value=initialPrompt;
+ }
+ dlg.showModal();
+}
+
+/* ---------- Arayüz ---------- */
+const SEND=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`,STOP=`<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect width="12" height="12" rx="2" fill="currentColor"/></svg>`;
+
+function emptyHTML(){
+ const mKey=getCurMode();
+ const modes=allModes();
+ const m=modes[mKey]||modes.dev;
+ return `<div class="empty">
+  <svg class="logo" viewBox="0 0 512 512" aria-hidden="true"><use href="#lg"/></svg>
+  <h2>${esc(m.icon)} ${esc(m.name)} Modu</h2>
+  <p>${esc(m.desc)}</p>
+  <div style="margin:12px 0 16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <button class="btn dl-app-btn" onclick="downloadErenXHtml()" style="font-size:12px;padding:6px 14px" title="Tek dosya ErenX.html indir">📥 ErenX.html İndir (Honor Pad 10 / Tek Dosya)</button>
+    <button class="btn" onclick="openTemplateManager(false)" style="font-size:12px;padding:6px 14px" title="Davranış modunu değiştir veya özelleştir">🎭 Mod Değiştir (${esc(m.icon)} ${esc(m.name)})</button>
+    <button class="btn" onclick="$('#mem-btn').click()" style="font-size:12px;padding:6px 14px" title="Hafıza notlarını aç">🧠 Hafıza Notları</button>
+  </div>
+  <div class="chips">${(m.chips||[]).map(ch=>`<button data-p="${esc(ch)}">${esc(ch)}</button>`).join("")}</div>
+ </div>`;
+}
+
+function filterChats(){
+ let list=[...S.chats];
+ if(searchQuery.trim()){
+  const q=searchQuery.trim().toLowerCase();
+  list=list.filter(c=>c.title.toLowerCase().includes(q)||c.msgs.some(m=>(m.content||"").toLowerCase().includes(q)));
+ }
+ list.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+ return list;
+}
+
+function renderChatList(){
+ const f=filterChats();
+ const modes=allModes();
+ if(!f.length){
+  $("#list").innerHTML='<div class="hint">'+(searchQuery?'Eşleşen sohbet bulunamadı.':'Henüz sohbet yok.')+'</div>';
+  return;
+ }
+ $("#list").innerHTML=f.map(c=>{
+  const m=modes[c.mode||"dev"]||modes.dev;
+  return `
+  <div class="ci ${c.id===S.cur?"on":""} ${c.pinned?"pinned":""}">
+   <button class="t" data-open="${c.id}" title="${esc(c.title)}"><span class="c-badge">${esc(m.icon)}</span><span style="overflow:hidden;text-overflow:ellipsis">${esc(c.title)}</span></button>
+   <div class="c-acts">
+    <button class="icon-btn pin" data-pin="${c.id}" title="${c.pinned?"Sabitlemeyi kaldır":"Sabitle"}">${c.pinned?"📌":"📍"}</button>
+    <button class="icon-btn ren" data-ren="${c.id}" title="Yeniden adlandır">✏️</button>
+    <button class="icon-btn exp-md" data-exp-md="${c.id}" title="Markdown indir">📄</button>
+    <button class="icon-btn exp-json" data-exp-json="${c.id}" title="JSON indir">{ }</button>
+    <button class="icon-btn x" data-del="${c.id}" title="Sil">✕</button>
+   </div>
+  </div>`;
+ }).join("");
+}
+
+function renderAttachments(){
+ const b=$("#att-bar");
+ if(!pendingFiles.length){b.hidden=true;b.innerHTML="";return}
+ b.hidden=false;
+ b.innerHTML=pendingFiles.map((f,idx)=>`
+  <div class="att-chip">
+   ${f.isImage?`<img src="${esc(f.dataUrl)}" alt="${esc(f.name)}">`:`<span>📄</span>`}
+   <span title="${esc(f.name)}">${esc(f.name.length>18?f.name.slice(0,16)+'…':f.name)}</span>
+   <small style="color:var(--m)">(${Math.round(f.size/1024)||1}K)</small>
+   <button class="x" data-rm-att="${idx}" title="Kaldır">✕</button>
+  </div>
+ `).join("");
+}
+
+function renderModeDropdown(){
+ const curM=getCurMode();
+ const modes=allModes();
+ const m=modes[curM]||modes.dev;
+ $("#cur-mode-ico").textContent=m.icon;
+ $("#cur-mode-name").textContent=m.name;
+
+ $("#mode-list").innerHTML=Object.keys(modes).map(k=>{
+  const item=modes[k];
+  const isAct=(k===curM);
+  return `
+   <button class="mode-opt ${isAct?"active":""}" data-set-mode="${k}">
+    <span class="m-ico">${esc(item.icon)}</span>
+    <div class="m-info">
+     <div style="display:flex;align-items:center;justify-content:space-between;gap:4px">
+      <span class="m-tit">${esc(item.name)}</span>
+      ${isAct?'<span style="font-size:10px;color:var(--a);font-weight:700">✓ Seçili</span>':(item.isCustom?'<span style="font-size:10px;color:#10b981">Özel</span>':'')}
+     </div>
+     <span class="m-des">${esc(item.desc)}</span>
+    </div>
+   </button>
+  `;
+ }).join("");
+}
+
+/* ---------- Hafıza Yönetimi & Güncelleme ---------- */
+function renderMemoryList(){
+ const list=$("#mem-list");
+ if(!S.memories||!S.memories.length){
+  list.innerHTML='<div class="hint">Henüz kaydedilmiş hafıza notu yok. Yukarıdaki kutudan ekleyebilirsin.</div>';
+  return;
+ }
+ list.innerHTML=S.memories.map((mem,i)=>{
+  const isEditing=editingMemIdx===i;
+  if(isEditing){
+   return `
+   <div class="mem-item">
+    <div class="mem-edit-box">
+     <input type="text" id="edit-mem-inp" value="${esc(mem)}">
+     <button class="btn pri" style="padding:4px 8px;font-size:11px" data-save-edited-mem="${i}">Kaydet</button>
+     <button class="btn" style="padding:4px 8px;font-size:11px" id="cancel-edit-mem">Vazgeç</button>
+    </div>
+   </div>`;
+  }
+  return `
+  <div class="mem-item">
+   <span class="mem-txt">• ${esc(mem)}</span>
+   <div class="mem-btns">
+    <button data-edit-mem="${i}" title="Düzenle">✏️</button>
+    <button class="del" data-del-mem="${i}" title="Sil">✕</button>
+   </div>
+  </div>`;
+ }).join("");
+}
+
+function render(){
+ renderChatList();
+ renderModeDropdown();
+ const c=cur();
+ $("#title").textContent=c?c.title:"ErenX";
+ const mb=$("#mode");
+ mb.textContent=({mega:"⚡ Mega AI",local:"Tarayıcıda yerel",openai:"OpenAI uyumlu",anthropic:"Anthropic",gemini:"Google Gemini"})[S.cfg.provider]+" · "+S.cfg.model;
+ mb.className="badge";
+ 
+ const el=$("#msgs");
+ if(!c||(!c.msgs.length&&!busy)){
+  el.innerHTML=emptyHTML()+setupCard();
+ }else{
+  el.innerHTML=c.msgs.map((m,i)=>{
+   const isEditing=editingMsgIndex===i;
+   const imgs=(m.images&&m.images.length)?`<div class="m-imgs">${m.images.map(img=>`<img src="${esc(img.dataUrl)}" alt="${esc(img.name||"görsel")}" onclick="window.open(this.src,'_blank')">`).join("")}</div>`:"";
+   
+   let bodyHtml="";
+   if(isEditing){
+    bodyHtml=`<div class="edit-box"><textarea id="edit-inp">${esc(m.rawText||m.content)}</textarea><div class="edit-acts"><button class="btn" id="cancel-edit">Vazgeç</button><button class="btn pri" id="save-edit" data-i="${i}">Kaydet ve Yanıtla</button></div></div>`;
+   }else if(m.tool){
+    bodyHtml=`<pre class="tr">${esc(m.content)}</pre>`;
+   }else if(m.role==="user"){
+    bodyHtml=`${imgs}<p>${esc(m.content).replace(/\n/g,"<br>")}</p>`;
+   }else{
+    const cleanContent=parseMediaTags(m.content,i);
+    bodyHtml=md(cleanContent);
+    // Canlı Uygulama kartı kaldırıldı
+   }
+
+   const estTokens=m.tokens||Math.max(1,Math.round((m.content||"").length/3.8));
+   const durSec=m.durationMs?(m.durationMs/1000).toFixed(1):null;
+   const metaPill=m.role==="assistant"?`<span class="meta-pill">~${estTokens} token${durSec?` · ${durSec} sn`:""}</span>`:"";
+   const isSpeaking=speakingMsgIndex===i;
+
+   // Hafıza Öneri Kartı
+   let memCardHtml="";
+   if(m.memorySuggestion&&!m.memoryDismissed){
+    if(m.memorySaved){
+     memCardHtml=`<div class="mem-card saved"><span>✓ Hafızaya kaydedildi: "${esc(m.memorySuggestion)}"</span></div>`;
+    }else{
+     memCardHtml=`<div class="mem-card"><span>💡 <b>Hafıza Önerisi:</b> ErenX şunu hatırlamayı öneriyor: "${esc(m.memorySuggestion)}"</span><div class="mem-acts"><button class="btn pri" data-save-mem="${esc(m.memorySuggestion)}" data-msg-idx="${i}">Hafızaya Kaydet ✓</button><button class="btn" data-dismiss-mem="${i}">Yoksay</button></div></div>`;
+    }
+   }
+
+   return `
+   <div class="m ${m.role}">
+    <div class="who">${m.tool?"Araç sonucu (run_js)":m.role==="user"?"Sen":"ErenX"}</div>
+    <div class="bd">${bodyHtml}</div>
+    ${memCardHtml}
+    ${m.steps?stepsHTML(m.steps,false):""}
+    <div class="act">
+     <button data-a="copy" data-i="${i}">Kopyala</button>
+     ${m.role==="user"&&!busy?`<button data-a="edit" data-i="${i}">Düzenle</button>`:""}
+     ${m.role==="assistant"&&"speechSynthesis" in window?`<button data-a="speak" data-i="${i}">${isSpeaking?"Durdur ⏹":"Seslendir 🔊"}</button>`:""}
+     ${m.role==="assistant"&&i===c.msgs.length-1&&!busy?`<button data-a="re">Yeniden oluştur</button>`:""}
+     ${metaPill}
+    </div>
+   </div>`;
+  }).join("")+(busy&&RUN?`<div class="m" id="live">${stepsHTML(RUN.steps,true)}</div>`:"");
+  el.scrollTop=el.scrollHeight;
+ }
+
+ $("#send").innerHTML=busy?STOP:SEND;
+ $("#send").setAttribute("aria-label",busy?"Durdur":"Gönder");
+ renderAttachments();
+ renderProj();
+ save();
+}
+
+function renderProj(){
+ const fs=files(cur());
+ if(!fs.find(f=>f.name===sel))sel=fs.length?fs[0].name:null;
+ $("#files").innerHTML=fs.length?fs.map(f=>`<button data-f="${esc(f.name)}" class="${f.name===sel?"on":""}">${esc(f.name)}</button>`).join(""):"";
+ const f=fs.find(x=>x.name===sel),pd=previewDoc(fs);
+ ["#fcopy","#fdl"].forEach(i=>$(i).disabled=!f);
+ $("#fzip").disabled=!fs.length;$("#fprev").disabled=!pd;
+ const v=$("#view");
+ if(!f){v.innerHTML='<div class="hint">Henüz dosya yok. ErenX bir kod bloğu ürettiğinde burada görünür.</div>';return}
+ if(vmode==="prev"&&pd){v.innerHTML='<iframe sandbox="allow-scripts" title="Önizleme"></iframe>';v.firstChild.srcdoc=pd}
+ else{vmode="code";v.innerHTML="<pre>"+esc(f.code)+"</pre>"}
+}
+
+function showErr(t){
+ const e=$("#err");e.hidden=!t;
+ e.innerHTML=t?esc(t)+' <button id="errset" class="btn" style="margin-left:8px;padding:2px 8px;font-size:11px">API anahtarı gir</button>':"";
+}
+$("#err").onclick=e=>{if(e.target.id==="errset")$("#set").click()};
+$("#kbtn").onclick=()=>$("#set").click();
+
+function setupCard(){
+ if(S.cfg.provider!=="local"&&KEY)return"";
+ const p=S.cfg.provider;
+ return `<div class="setup"><b>Kendi API anahtarınla bağlan</b><div class="r"><select id="qk-prov" aria-label="Sağlayıcı"><option value="mega"${p==="mega"?" selected":""}>⚡ ErenX Mega AI (Anahtarsız)</option><option value="gemini"${p==="gemini"?" selected":""}>Google Gemini</option><option value="openai"${p==="openai"?" selected":""}>OpenAI uyumlu</option><option value="anthropic"${p==="anthropic"?" selected":""}>Anthropic (Claude)</option></select><input type="password" id="qk-key" placeholder="API anahtarını yapıştır" autocomplete="off" aria-label="API anahtarı"><button class="btn pri" id="qk-ok">Bağlan</button></div><label><input type="checkbox" id="qk-rem"${S.cfg.remember?" checked":""}> Bu tarayıcıda hatırla</label></div>`;
+}
+
+function quickSave(){
+ let p=$("#qk-prov").value;const k=$("#qk-key").value.trim();
+ if(/^(AQ\.|AIza)/.test(k))p="gemini";
+ if(!k){showErr("Önce API anahtarını yapıştır.");return}
+ if(S.cfg.provider!==p||!S.cfg.base){S.cfg.base=DEF[p][0];S.cfg.model=DEF[p][1]}
+ S.cfg.provider=p;S.cfg.remember=$("#qk-rem").checked;KEY=k;
+ showErr("");render();
+}
+$("#msgs").addEventListener("click",e=>{if(e.target.id==="qk-ok")quickSave()});
+
+/* ---------- Model bağlantısı ---------- */
+let ENG=null,ENGM="";
+function setStatus(t){const e=$("#st");e.hidden=!t;e.textContent=t||""}
+
+async function localEngine(){
+ if(ENG&&ENGM===S.cfg.model)return ENG;
+ if(!navigator.gpu)throw new Error("Bu tarayıcı WebGPU desteklemiyor. Güncel Chrome veya Edge kullan ya da Ayarlar'dan bir API sağlayıcısı seç.");
+ if(ENG){try{await ENG.unload()}catch(e){}ENG=null}
+ try{
+  setStatus("Model hazırlanıyor…");
+  const w=await import("https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.79/+esm");
+  ENG=await w.CreateMLCEngine(S.cfg.model,{initProgressCallback:p=>setStatus(p.text||"Yükleniyor…")});
+  ENGM=S.cfg.model;return ENG;
+ }catch(e){
+  ENG=null;
+  throw new Error("Yerel model başlatılamadı: "+(e&&e.message||e)+(location.protocol==="file:"?" — Dosyayı file:// yerine yerel sunucudan aç (klasörde: python -m http.server 8000, sonra http://localhost:8000/ErenX.html).":""));
+ }
+}
+
+async function localChat(c,onTok){
+ const eng=await localEngine();setStatus("");
+ const msgs=[{role:"system",content:sysPrompt()},...c.msgs.filter(m=>!m.err).map(m=>({role:m.role,content:m.content}))];
+ const st=await eng.chat.completions.create({messages:msgs,stream:true});let t="";
+ for await(const ch of st){t+=(ch.choices[0]&&ch.choices[0].delta.content)||"";onTok(t)}
+ if(!t)throw new Error("Model boş yanıt döndürdü.");
+ return{text:t};
+}
+
+function sysPrompt(){
+ const mKey=getCurMode();
+ const modes=allModes();
+ const m=modes[mKey]||modes.dev;
+ let p=m.sys||S.cfg.sys;
+
+ if(S.memories&&S.memories.length){
+  p+="\n\nKULLANICI HAFIZASI (Daha önceki konuşmalardan kaydedilmiş notlar):\n"+S.memories.map(x=>"- "+x).join("\n")+"\nBu bilgilere her zaman dikkat et ve yanıtlarını bu doğrultuda kişiselleştir.";
+ }
+ return p;
+}
+
+let RUN=null;
+const cl=x=>({t:x.t,d:x.d,st:x.st==="run"?"ok":x.st,ms:x.ms});
+function step(t,d){const x={t,d:d||"",st:"run",t0:Date.now()};RUN.steps.push(x);paintSteps();return x}
+function done(x,ok,d){x.st=ok===false?"err":"ok";x.ms=Date.now()-x.t0;if(d!==undefined)x.d=d;paintSteps();return x}
+
+/* ---------- Claude Tarzı Canlı Amblem & Durum Tespiti ---------- */
+function detectCurrentEmblem(t, stepName){
+ if(!t)return {type:"think",text:stepName||"Düşünüyor...",icon:"🧠"};
+ const codeMatches=t.match(/```/g)||[];
+ const inCodeBlock=(codeMatches.length%2===1);
+ if(inCodeBlock){
+  const lastIdx=t.lastIndexOf("```");
+  const head=t.slice(lastIdx+3,lastIdx+55).split("\n")[0].trim();
+  const parts=head.split(/[\s:]+/);
+  const lang=parts[0]||"kod";
+  const fn=parts.slice(1).find(x=>x.includes("."))||(lang==="html"?"index.html":(lang+" dosyası"));
+  return {type:"code",text:`Kod yazılıyor... (${fn})`,icon:"⚡"};
+ }
+ const tail=t.slice(-250);
+ if(/\b(hesap|maliyet|formül|algoritma|oran|yüzde|kâr|zarar|toplam|işlem|matematik|karmaşıklık|O\(n\)|çözüm|bütçe)\b/i.test(tail)||/[\d\s]+[\+\-\*\/=][\d\s]+/i.test(tail)){
+  return {type:"calc",text:"Hesap kitap yapıyor...",icon:"📐"};
+ }
+ if(/\b(model|yapay zeka|ai|neural|sinir ağı|transformer|ağırlık|şema|katman|dataset|tokenizer|inference)\b/i.test(tail)){
+  return {type:"model",text:"Model yapılıyor...",icon:"🧬"};
+ }
+ if(/\b(web sitesi|arayüz|html|css|bileşen|glassmorphism|tasarım|responsive|layout|grid|flexbox|ui|sayfa)\b/i.test(tail)){
+  return {type:"web",text:"Web sitesi inşa ediliyor...",icon:"🌐"};
+ }
+ if(/\b(yanındayım|üzülme|anlayabiliyorum|hissettiğin|yalnız değilsin|zor bir dönem|huzur|şefkat|rahatla|omzuna|kalbini)\b/i.test(tail)){
+  return {type:"comfort",text:"Seni dinliyor & teselli ediyor...",icon:"🤍"};
+ }
+ return {type:"think",text:"Derinlemesine düşünüyor...",icon:"🧠"};
+}
+
+function detectEmblem(text, userPrompt){
+ const p=((userPrompt||"")+" "+(text||"")).toLowerCase();
+ const codeParts=(text||"").split("```");
+ if(codeParts.length%2===0){
+  const m=text.match(/```(\w+)?\s*([^\n]+)?/g);
+  const last=m?m[m.length-1]:"";
+  const file=last.replace(/```\w*\s*/,"").trim()||"index.html";
+  return{type:"coding",icon:"💻",title:"Kod yazılıyor…",sub:file};
+ }
+ if(p.includes("yapay zeka")||p.includes("ai oluştur")||p.includes("model")||p.includes("asistan")||p.includes("neural")||p.includes("oyun")||p.includes("simülasyon")||p.includes("ajan")){
+  return{type:"model",icon:"🔮",title:"Model & Sistem yapılıyor…",sub:"Claude Opus 5.5 mimarisi"};
+ }
+ if(p.includes("hesap")||p.includes("matematik")||p.includes("algoritma")||p.includes("mimari")||p.includes("plan")||p.includes("analiz")||p.includes("fizik")||p.includes("optimize")){
+  return{type:"math",icon:"📐",title:"Hesap kitap & analiz yapıyor…",sub:"Derin mantık doğrulaması"};
+ }
+ return{type:"thinking",icon:"🧠",title:"Düşünüyor…",sub:"Claude Opus 5.5 zeka motoru"};
+}
+
+function emblemHTML(emb, elapsedSec){
+ return '<div class="claude-emblem-wrap">' +
+  '<div class="claude-emblem '+emb.type+'">' +
+  '<span class="emblem-icon">'+emb.icon+'</span>' +
+  '<span class="emblem-text">'+esc(emb.title)+'</span>' +
+  '<span class="emblem-dot"></span>' +
+  '<span class="emblem-sub">'+esc(emb.sub||"")+'</span>' +
+  '<span class="emblem-timer">'+elapsedSec+'s</span>' +
+  '</div></div>';
+}
+
+function smartScrollToBottom(){
+ const e=$("#msgs");
+ if(!e)return;
+ const dist=e.scrollHeight-e.scrollTop-e.clientHeight;
+ if(dist<=100){
+  e.scrollTo({top:e.scrollHeight,behavior:"smooth"});
+ }
+}
+
+function stepsHTML(a,live,currentEmblem){
+ const tot=a.reduce((n,x)=>n+(x.ms!=null?x.ms:(x.t0?Date.now()-x.t0:0)),0);
+ const cu=[...a].reverse().find(x=>x.st==="run")||a[a.length-1]||{t:"Hazırlanıyor"};
+ const body='<div class="tl">'+a.map(x=>{const ms=x.ms!=null?x.ms:(x.t0?Date.now()-x.t0:null);return `<div class="stp ${x.st}"><i></i><span>${esc(x.t)}</span><em>${esc(x.d||"")}${ms!=null?(x.d?" — ":"")+(ms/1000).toFixed(1)+" sn":""}</em></div>`}).join("")+"</div>";
+ if(live)return `<div class="think"><svg class="spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg><span class="shim">${esc(cu.t)}…</span><em>${Math.round((Date.now()-((a[0]&&a[0].t0)||Date.now()))/1000)} sn</em></div><details class="steps"><summary>Adımları göster (${a.length})</summary>${body}</details>`;
+ return `<details class="steps"><summary>Düşünme süreci (${a.length} adım, ${(tot/1000).toFixed(1)} sn)</summary>${body}</details>`;
+}
+function paintSteps(){
+ const l=$("#live");
+ if(l&&RUN){
+  const o=l.querySelector("details"),w=o&&o.open;
+  l.innerHTML=stepsHTML(RUN.steps,true);
+  if(w)l.querySelector("details").open=true;
+  smartScrollToBottom();
+ }
+}
+function watch(p,ms,msg){let t;return Promise.race([p,new Promise((_,j)=>{t=setTimeout(()=>j(new Error(msg)),ms)})]).finally(()=>clearTimeout(t))}
+
+async function* sse(r){
+ const eat=function*(l){l=l.trim();if(l.startsWith("data:")){const d=l.slice(5).trim();if(d&&d!=="[DONE]")yield d}};
+ if(!r.body||!r.body.getReader){for(const l of (await r.text()).split("\n"))yield*eat(l);return}
+ const rd=r.body.getReader(),dc=new TextDecoder();RUN.rd=rd;let b="";
+ for(;;){
+  const x=await watch(rd.read(),60000,"Sağlayıcı 60 sn boyunca veri göndermedi.");if(x.done)break;
+  b+=dc.decode(x.value,{stream:true});let i;
+  while((i=b.indexOf("\n"))>=0){const l=b.slice(0,i);b=b.slice(i+1);yield*eat(l)}
+ }
+ if(b)yield*eat(b);
+}
+
+function targets(m){
+ const c=S.cfg,sys=sysPrompt(),b=(c.base||"").replace(/\/$/,"");
+ const effectiveKey=KEY||BUILT_IN_KEY;
+ const J={"Content-Type":"application/json"};
+ const list=[];
+
+ const megaTarget=()=>{
+  const oaiMsgs=[{role:"system",content:sys}];
+  for(const msg of m){
+   if(msg.role==="user"&&msg.images&&msg.images.length){
+    const contentParts=[{type:"text",text:msg.content||""}];
+    for(const img of msg.images){
+     contentParts.push({type:"image_url",image_url:{url:img.dataUrl}});
+    }
+    oaiMsgs.push({role:"user",content:contentParts});
+   }else{
+    oaiMsgs.push({role:msg.role==="assistant"?"assistant":"user",content:msg.content});
+   }
+  }
+  const megaModel=(c.provider==="mega"&&c.model)?c.model:"openai";
+  return{
+   url:"https://text.pollinations.ai/openai/chat/completions",
+   headers:J,
+   body:JSON.stringify({model:megaModel,stream:true,max_tokens:12000,messages:oaiMsgs}),
+   ex:j=>(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||""
+  };
+ };
+
+ const geminiTarget=()=>{
+  if(!effectiveKey)return null;
+  const geminiContents=m.map(msg=>{
+   const parts=[];
+   if(msg.role==="user"&&msg.images&&msg.images.length){
+    for(const img of msg.images){
+     parts.push({inlineData:{mimeType:img.mimeType||"image/jpeg",data:img.base64}});
+    }
+   }
+   parts.push({text:msg.content||""});
+   return{role:msg.role==="assistant"?"model":"user",parts};
+  });
+  const gModel=(c.provider==="gemini"&&c.model)?c.model:"gemini-3.8-flash";
+  return{
+   url:"https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(gModel)+":streamGenerateContent?alt=sse&key="+encodeURIComponent(effectiveKey),
+   headers:J,
+   body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},contents:geminiContents,generationConfig:{maxOutputTokens:12288,temperature:0.7}}),
+   ex:j=>((j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)||[]).map(q=>q.text||"").join("")
+  };
+ };
+
+ // If running in standalone browser without AndroidBridge, prefer Mega (zero CORS / zero key)
+ if(!IS_ANDROID_APP){
+  list.push(megaTarget());
+  const gt=geminiTarget();if(gt)list.push(gt);
+ }else{
+  const gt=geminiTarget();if(gt)list.push(gt);
+  list.push(megaTarget());
+ }
+
+ return list.filter(Boolean);
+}
+
+async function stream(m,onTok){
+ const errs=[];
+ for(const t of targets(m)){
+  const host=new URL(t.url).host,s1=step("Bağlanılıyor",host);
+  try{
+   let r=await watch(fetch(t.url,{method:"POST",headers:t.headers,body:t.body}),60000,"Bağlantı 60 sn içinde kurulamadı.");
+   if(!r.ok){
+    const raw=await r.text();let j=null;try{j=JSON.parse(raw)}catch(e){}
+    const d=(j&&j.error&&(j.error.message||j.error))||raw.slice(0,200);
+    done(s1,false,"HTTP "+r.status);
+    errs.push(host+" → "+r.status+": "+(typeof d==="string"?d:JSON.stringify(d)));
+    continue;
+   }
+   done(s1,true,"bağlandı");
+   const s2=step("Yanıt bekleniyor");let txt="",s3=null;
+   for await(const d of sse(r)){
+    if(RUN.stop)break;let j;try{j=JSON.parse(d)}catch(e){continue}
+    if(j.error){throw new Error(typeof j.error==="string"?j.error:j.error.message||JSON.stringify(j.error))}
+    const delta=(j.choices&&j.choices[0]&&j.choices[0].delta)||{};
+    const x=t.ex(j)||delta.content||"";
+    if(!x)continue;
+    if(!s3){done(s2,true);s3=step("Yanıt yazılıyor")}
+    txt+=x;onTok(txt);
+   }
+   if(!txt&&!RUN.stop){
+    throw new Error("Boş yanıt alındı");
+   }
+   if(s3)done(s3,true,txt.length+" karakter");
+   else done(s2,true,"tamamlandı");
+   return txt;
+  }catch(e){
+   const msg=e instanceof TypeError?"Ağ hatası veya CORS engeli (Failed to fetch)":e.message;
+   done(s1,false,msg);
+   errs.push(host+": "+msg);
+   continue;
+  }
+ }
+ throw new Error("Bağlantı kurulamadı. "+errs.join(" | ")+" (Mega veya Gemini ile otomatik yeniden bağlanılıyor).");
+}
+
+function runJs(code){
+ return new Promise(res=>{
+  const f=document.createElement("iframe");f.sandbox="allow-scripts";f.style.display="none";
+  const id=uid(),log=[];let tm;
+  const fin=err=>{clearTimeout(tm);removeEventListener("message",h);f.remove();res({log:log.join("\n").slice(0,4000),err:err||""})};
+  const h=e=>{if(e.source!==f.contentWindow)return;const d=e.data||{};if(d.id!==id)return;if(d.l!==undefined)log.push(d.l);if(d.end)fin(d.err)};
+  addEventListener("message",h);tm=setTimeout(()=>fin("Zaman aşımı (5 sn)"),5000);
+  const cj=JSON.stringify(code).replace(/</g,"\\u003c");
+  f.srcdoc=`<script>const P=m=>parent.postMessage(Object.assign({id:${JSON.stringify(id)}},m),"*");const L=(...a)=>P({l:a.map(x=>typeof x==="object"?JSON.stringify(x):String(x)).join(" ")});console.log=L;console.error=L;console.warn=L;
+(async()=>{try{await(0,eval)("(async()=>{"+${cj}+"\\n})()");P({end:1})}catch(e){P({end:1,err:String(e)})}})()<\/script>`;
+  document.body.appendChild(f);
+ });
+}
+
+async function run(){
+ const c=cur();if(!c)return;
+ RUN={steps:[],stop:false};busy=true;showErr("");render();
+ const startTime=Date.now();
+ const tk=setInterval(paintSteps,500);
+ try{
+  for(let it=0;it<5&&!RUN.stop;it++){
+   const prev=new Set(files(c).map(f=>f.name+":"+f.code.length));let pu=null;
+   const onTok=t=>{
+    const cleanDisplay=t.replace(/\[(?:HAFIZA|HAFIZA_ÖNERİ|HAFIZA_ONERI|HAFIZA_ÖNERISI|HAFIZA_ONERISI):[^\]]*\]?/gi,"").trimEnd();
+    if(!pu){pu={role:"assistant",content:cleanDisplay};c.msgs.push(pu);render()}
+    else{
+     pu.content=cleanDisplay;
+     const b=[...document.querySelectorAll("#msgs .m.assistant .bd")].pop();
+     if(b){b.innerHTML=md(cleanDisplay);const e=$("#msgs");e.scrollTop=e.scrollHeight}
+    }
+   };
+   done(step("İstek hazırlandı",c.msgs.length+" mesaj, "+S.cfg.model));
+   let txt=S.cfg.provider==="local"?await localChat(c,onTok):await stream(c.msgs.filter(m=>!m.err),onTok);
+   
+   let memSug=null;
+   const memMatch=txt.match(/\[(?:HAFIZA|HAFIZA_ÖNERİ|HAFIZA_ONERI|HAFIZA_ÖNERISI|HAFIZA_ONERISI):\s*([^\]]+)\]/i);
+   if(memMatch){
+    memSug=memMatch[1].trim();
+    txt=txt.replace(/\[(?:HAFIZA|HAFIZA_ÖNERİ|HAFIZA_ONERI|HAFIZA_ÖNERISI|HAFIZA_ONERISI):[^\]]+\]/gi,"").trim();
+   }
+
+   if(pu){
+   // Check if code block remained unclosed (cut off)
+   const codeDelims=(txt.match(/```/g)||[]).length;
+   if(codeDelims%2!==0){
+    txt+='\n```\n\n<div class="row" style="margin-top:8px"><button class="continue-btn" id="auto-continue-btn">▶️ Kodun Devamını Yaz (Eksiksiz Tamamla)</button></div>';
+   }
+pu.content=txt;render();
+    if(memSug&&!pu.memorySuggestion)pu.memorySuggestion=memSug;
+   }else{
+    pu={role:"assistant",content:txt,memorySuggestion:memSug};
+    c.msgs.push(pu);
+   }
+
+   for(const f of files(c))if(!prev.has(f.name+":"+f.code.length))done(step("Dosya yazıldı",f.name+" ("+f.code.split("\n").length+" satır)"));
+   const m=txt.match(/```run_js[^\n]*\n([\s\S]*?)```/);if(!m||RUN.stop)break;
+   const sj=step("Kod çalıştırılıyor","JavaScript, izole ortam"),o=await runJs(m[1]);
+   done(sj,!o.err,o.err||"tamamlandı");
+   c.msgs.push({role:"user",tool:true,content:(o.log||"(çıktı yok)")+(o.err?"\nHata: "+o.err:"")});
+   render();
+  }
+  const last=[...c.msgs].reverse().find(m=>m.role==="assistant");
+  if(last){
+   last.steps=RUN.steps.map(cl);
+   last.durationMs=Date.now()-startTime;
+   last.tokens=Math.max(1,Math.round((last.content||"").length/3.8));
+  }
+ }catch(e){
+  showErr(e.message);done(step("Başarısız",e.message),false);
+  c.msgs.push({
+   role:"assistant",
+   err:true,
+   content:"Yanıt alınamadı: "+e.message,
+   steps:RUN.steps.map(cl),
+   durationMs:Date.now()-startTime,
+   tokens:0
+  });
+ }finally{
+  clearInterval(tk);busy=false;RUN=null;ctl=null;setStatus("");render();
+ }
+}
+
+
+/* ---------- Jarvis Pro Uygulama Başlatıcı & Kapak Motoru ---------- */
+function normStr(str){
+ if(!str) return "";
+ return str.toString()
+  .replace(/İ/g, "i").replace(/I/g, "ı")
+  .toLowerCase()
+  .replace(/ç/g, "c")
+  .replace(/ğ/g, "g")
+  .replace(/ı/g, "i")
+  .replace(/ö/g, "o")
+  .replace(/ş/g, "s")
+  .replace(/ü/g, "u")
+  .trim();
+}
+
+function speakJarvis(text){
+ try {
+  if(!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "tr-TR";
+  u.rate = 1.05;
+  const voices = window.speechSynthesis.getVoices();
+  const trVoice = voices.find(v => v.lang === "tr-TR" || v.lang.startsWith("tr"));
+  if(trVoice) u.voice = trVoice;
+  window.speechSynthesis.speak(u);
+ } catch(e){}
+}
+
+const FALLBACK_APPS = [
+ {
+  name: "Roblox",
+  package: "com.roblox.client",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#0b0e14"/><g transform="rotate(-15 50 50)"><rect x="22" y="22" width="56" height="56" rx="10" fill="#E2231A"/><rect x="37" y="37" width="26" height="26" rx="4" fill="#0b0e14"/></g></svg>'
+ },
+ {
+  name: "Roblox",
+  package: "com.roblox.client.beta",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#0f172a"/><g transform="rotate(-15 50 50)"><rect x="22" y="22" width="56" height="56" rx="10" fill="url(#rbxGrad)"/><rect x="37" y="37" width="26" height="26" rx="4" fill="#0f172a"/></g><rect x="52" y="66" width="38" height="18" rx="6" fill="#38bdf8"/><text x="71" y="79" font-family="sans-serif" font-weight="900" font-size="10" fill="#000" text-anchor="middle">BETA</text><defs><linearGradient id="rbxGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#818cf8"/></linearGradient></defs></svg>'
+ },
+ {
+  name: "YouTube",
+  package: "com.google.android.youtube",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#FF0000"/><polygon points="40,32 70,50 40,68" fill="#ffffff"/></svg>'
+ },
+ {
+  name: "WhatsApp",
+  package: "com.whatsapp",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#25D366"/><path d="M50 22C34.5 22 22 34.5 22 50C22 55.4 23.5 60.4 26.2 64.7L23 77L35.6 73.9C39.7 76.3 44.7 78 50 78C65.5 78 78 65.5 78 50C78 34.5 65.5 22 50 22ZM67 59.8C66.2 62.1 63.1 63.8 60.5 64.4C58.7 64.8 56.4 65.1 48.5 61.8C38.4 57.6 31.9 47.4 31.4 46.7C30.9 46 27.4 41.3 27.4 36.5C27.4 31.7 29.8 29.3 30.8 28.3C31.6 27.5 32.8 27.1 34 27.1C34.4 27.1 34.8 27.1 35.1 27.1C36.1 27.2 36.6 27.2 37.3 28.8C38.1 30.7 40 35.3 40.2 35.8C40.4 36.3 40.6 36.9 40.3 37.5C40 38.1 39.7 38.4 39.2 39C38.7 39.6 38.3 40 37.8 40.6C37.3 41.1 36.8 41.7 37.4 42.7C38 43.7 40.1 47.1 43.1 49.8C47 53.3 50.2 54.4 51.3 54.9C52.2 55.3 53.3 55.2 53.9 54.5C54.7 53.6 55.7 52.2 56.7 50.8C57.4 49.8 58.3 49.9 59.3 50.3C60.3 50.7 65.6 53.3 66.6 53.8C67.6 54.3 68.3 54.6 68.5 55C68.8 55.6 68.8 57.5 67 59.8Z" fill="#ffffff"/></svg>'
+ },
+ {
+  name: "Chrome",
+  package: "com.android.chrome",
+  icon: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#ffffff"/><circle cx="50" cy="50" r="18" fill="#1a73e8"/><path d="M50 4 A46 46 0 0 1 89.8 27 L50 27 A18 18 0 0 0 34.4 41 L14.7 27 A46 46 0 0 1 50 4 Z" fill="#ea4335"/><path d="M89.8 27 A46 46 0 0 1 73 89.8 L53.3 55.6 A18 18 0 0 0 68 50 L89.8 50 Z" fill="#fbbc04"/><path d="M73 89.8 A46 46 0 0 1 10.2 73 L29.9 58.7 A18 18 0 0 0 46.7 67.7 L73 89.8 Z" fill="#34a853"/></svg>'
+ },
+ {
+  name: "Instagram",
+  package: "com.instagram.android",
+  icon: '<svg viewBox="0 0 100 100"><defs><linearGradient id="igG" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#igG)"/><rect x="25" y="25" width="50" height="50" rx="14" fill="none" stroke="#fff" stroke-width="6"/><circle cx="50" cy="50" r="12" fill="none" stroke="#fff" stroke-width="6"/><circle cx="64" cy="36" r="3" fill="#fff"/></svg>'
+ },
+ {
+  name: "Spotify",
+  package: "com.spotify.music",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1DB954"/><path d="M74.8 54.4C60.2 45.7 36.3 44.9 22.4 49.1C20.2 49.8 17.8 48.5 17.1 46.3C16.4 44.1 17.7 41.7 19.9 41C35.9 36.1 62.4 37 79.2 47C81.2 48.2 81.8 50.8 80.6 52.8C79.4 54.8 76.8 55.5 74.8 54.4ZM74.4 64.9C73.4 66.5 71.3 67 69.7 66C57.4 58.4 38.3 56.2 23.4 60.7C21.6 61.2 19.7 60.2 19.2 58.4C18.7 56.6 19.7 54.7 21.5 54.2C38.6 49 59.6 51.5 73.3 59.9C74.9 61 75.4 63.2 74.4 64.9ZM69 75.2C68.2 76.5 66.5 76.9 65.2 76.1C54.7 69.7 39.5 68 24.3 71.5C22.8 71.8 21.3 70.9 21 69.4C20.7 67.9 21.6 66.4 23.1 66.1C40 62.2 56.7 64.2 68.4 71.3C69.7 72.1 70 73.8 69 75.2Z" fill="#121212"/></svg>'
+ },
+ {
+  name: "Discord",
+  package: "com.discord",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#5865F2"/><path d="M68.5 28C63.6 25.7 58.4 24.1 53 23.3C52.9 23.5 52.7 23.8 52.6 24.1C58.4 25.8 63.8 28.5 68.5 32C62.4 41 59.5 49.8 58.7 58.5C64.6 62.9 70.2 65.6 75.8 67.3C77.2 65.4 78.4 63.3 79.4 61.1C77.4 60.3 75.4 59.3 73.5 58.1C74 57.7 74.5 57.3 74.9 56.9C86.3 51.7 89.4 41.5 89.4 30.1C83.4 25.6 76.2 28 68.5 28ZM38.4 50.9C35.1 50.9 32.3 47.9 32.3 44.2C32.3 40.5 35 37.5 38.4 37.5C41.8 37.5 44.6 40.5 44.5 44.2C44.5 47.9 41.8 50.9 38.4 50.9ZM61.6 50.9C58.3 50.9 55.5 47.9 55.5 44.2C55.5 40.5 58.2 37.5 61.6 37.5C65 37.5 67.8 40.5 67.7 44.2C67.7 47.9 65 50.9 61.6 50.9Z" fill="#ffffff" transform="translate(-10, 6)"/></svg>'
+ },
+ {
+  name: "Minecraft",
+  package: "com.mojang.minecraftpe",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#4d321d"/><rect x="15" y="15" width="70" height="28" rx="8" fill="#588c2b"/><rect x="25" y="38" width="12" height="12" fill="#588c2b"/><rect x="52" y="38" width="14" height="16" fill="#588c2b"/><rect x="70" y="38" width="10" height="10" fill="#588c2b"/><circle cx="34" cy="62" r="5" fill="#382414"/><circle cx="68" cy="68" r="6" fill="#382414"/></svg>'
+ },
+ {
+  name: "Brawl Stars",
+  package: "com.supercell.brawlstars",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#0b0e14"/><circle cx="50" cy="50" r="36" fill="#facc15" stroke="#ca8a04" stroke-width="3"/><path d="M50 24L58 40L76 43L63 56L66 74L50 65L34 74L37 56L24 43L42 40Z" fill="#ef4444"/><circle cx="43" cy="48" r="4" fill="#000"/><circle cx="57" cy="48" r="4" fill="#000"/><rect x="44" y="58" width="12" height="4" rx="2" fill="#000"/></svg>'
+ },
+ {
+  name: "Google Play",
+  package: "com.android.vending",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#0f172a"/><path d="M26 21C25.4 21.6 25 22.7 25 24.1V75.9C25 77.3 25.4 78.4 26 79L53.5 51.5L26 21Z" fill="#00d6ff"/><path d="M62.7 42.3L53.5 51.5L62.7 60.7L73.6 54.5C76.8 52.7 76.8 49.8 73.6 48L62.7 42.3Z" fill="#ffce00"/><path d="M53.5 51.5L26 79C26.9 79.9 28.5 80.2 30.5 79.1L62.7 60.7L53.5 51.5Z" fill="#ff334b"/><path d="M53.5 51.5L62.7 42.3L30.5 23.9C28.5 22.8 26.9 23.1 26 24L53.5 51.5Z" fill="#00ea76"/></svg>'
+ },
+ {
+  name: "Kamera",
+  package: "com.android.camera",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1e293b"/><circle cx="50" cy="54" r="24" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/><circle cx="50" cy="54" r="14" fill="#38bdf8"/><rect x="42" y="20" width="16" height="8" rx="3" fill="#64748b"/></svg>'
+ },
+ {
+  name: "Galeri",
+  package: "com.android.gallery3d",
+  icon: '<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#4338ca"/><circle cx="36" cy="38" r="8" fill="#fbbf24"/><path d="M22 74L42 48L58 64L68 54L82 74Z" fill="#10b981"/></svg>'
+ }
+];
+
+let CACHED_APPS = null;
+
+function getDeviceAppsList(forceRefresh = false){
+ if(!forceRefresh && CACHED_APPS && CACHED_APPS.length) return CACHED_APPS;
+ let apps = [];
+ try {
+  if (window.AndroidBridge) {
+   let raw = "";
+   if (forceRefresh && typeof window.AndroidBridge.refreshInstalledApps === "function") {
+    raw = window.AndroidBridge.refreshInstalledApps();
+   } else if (typeof window.AndroidBridge.getInstalledApps === "function") {
+    raw = window.AndroidBridge.getInstalledApps();
+   }
+   if (raw) apps = JSON.parse(raw);
+  }
+ } catch(e){
+  console.warn("AndroidBridge getInstalledApps hatası:", e);
+ }
+
+ if (!apps || !apps.length) {
+  apps = FALLBACK_APPS.map(a => Object.assign({}, a));
+ }
+
+ // Duplicate isimleri tespit et ve bayrak ekle (örn: 2 farklı Roblox)
+ const nameCounts = {};
+ for (const a of apps) {
+  const k = normStr(a.name);
+  nameCounts[k] = (nameCounts[k] || 0) + 1;
+ }
+ for (const a of apps) {
+  const k = normStr(a.name);
+  a.isDuplicate = nameCounts[k] > 1;
+ }
+
+ CACHED_APPS = apps;
+ return apps;
+}
+
+function renderAppCover(app, size = 52){
+ const icon = app.icon || "";
+ if (icon.startsWith("data:image/") || icon.startsWith("http")) {
+  return '<img src="' + icon + '" class="jarvis-app-img" alt="' + esc(app.name) + '" onerror="this.style.display=\'none\'" />';
+ }
+ if (icon.startsWith("<svg") || icon.includes("<svg")) {
+  return '<div class="jarvis-app-svg">' + icon + '</div>';
+ }
+ return '<span class="jarvis-app-icon">' + (icon || '📱') + '</span>';
+}
+
+function playJarvisSound(type = "launch"){
+ try {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  if(type === "launch"){
+   osc.type = "sine";
+   osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+   osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.14);
+   gain.gain.setValueAtTime(0.25, ctx.currentTime);
+   gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.28);
+   osc.start();
+   osc.stop(ctx.currentTime + 0.28);
+  } else if(type === "hud"){
+   osc.type = "triangle";
+   osc.frequency.setValueAtTime(440, ctx.currentTime);
+   osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.08);
+   gain.gain.setValueAtTime(0.08, ctx.currentTime);
+   gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+   osc.start();
+   osc.stop(ctx.currentTime + 0.1);
+  }
+ } catch(e){}
+}
+
+function launchDeviceApp(pkg, name){
+ playJarvisSound("launch");
+ speakJarvis(name + " başlatılıyor, efendim.");
+ try {
+  if (window.AndroidBridge && typeof window.AndroidBridge.launchApp === "function") {
+   const ok = window.AndroidBridge.launchApp(pkg);
+   if (ok) {
+    showErr("");
+    const hud = $("#jarvis-quick-hud");
+    if(hud) hud.hidden = true;
+    return;
+   }
+  }
+ } catch(e){}
+ alert("📱 " + name + " (" + pkg + ") başlatılıyor... (Android APK cihazında doğrudan açılır)");
+ const hud = $("#jarvis-quick-hud");
+ if(hud) hud.hidden = true;
+}
+
+function refreshDeviceAppsList(){
+ getDeviceAppsList(true);
+ const c = cur();
+ if(c){
+  const lastMsg = [...c.msgs].reverse().find(m => m.role === "assistant" && m.content && m.content.includes("jarvis-app-card"));
+  if(lastMsg){
+   handleSpecialCommands("/aç");
+   return;
+  }
+ }
+ alert("🔄 Uygulama listesi ve kapakları yenilendi!");
+}
+
+function checkJarvisQuickHud(val){
+ const hud = $("#jarvis-quick-hud");
+ if(!hud) return;
+ const t = (val || "").trim();
+ const lower = t.toLowerCase();
+ if(!lower.startsWith("/aç") && !lower.startsWith("/ac") && !lower.startsWith("/open")){
+  hud.hidden = true;
+  hud.innerHTML = "";
+  return;
+ }
+
+ const query = t.replace(/^\/(?:aç|ac|open)\s*/i, "").trim();
+ const nQuery = normStr(query);
+ const allApps = getDeviceAppsList();
+ let filtered = allApps;
+ if(nQuery){
+  filtered = allApps.filter(a => normStr(a.name).includes(nQuery) || normStr(a.package).includes(nQuery));
+ }
+
+ if(!filtered.length){
+  hud.hidden = false;
+  hud.innerHTML = '<div class="jarvis-hud-head"><span>🔍 Jarvis Radar: Eşleşen Uygulama Yok</span><span class="hud-tag">"' + esc(query) + '"</span></div>';
+  return;
+ }
+
+ hud.hidden = false;
+ hud.innerHTML = 
+  '<div class="jarvis-hud-head">' +
+  '<span>⚡ JARVIS HIZLI RADAR — ' + filtered.length + ' UYGULAMA (' + (query ? esc(query) : 'TÜMÜ') + ')</span>' +
+  '<span class="hud-tag">Tek Tıkla Aç</span>' +
+  '</div>' +
+  '<div class="jarvis-hud-scroll">' +
+  filtered.map(app => {
+   return '<div class="jarvis-hud-item" onclick="launchDeviceApp(\'' + esc(app.package) + '\',\'' + esc(app.name) + '\')">' +
+    '<div class="jarvis-app-icon-wrap" style="width:36px;height:36px;border-radius:10px;">' +
+    renderAppCover(app, 36) +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:1px;text-align:left;">' +
+    '<span style="font-size:12px;font-weight:700;">' + esc(app.name) + (app.isDuplicate ? ' <span style="color:#f87171;font-size:10px;">(Farklı Kapak)</span>' : '') + '</span>' +
+    '<span class="jarvis-hud-sub">' + esc(app.package) + '</span>' +
+    '</div>' +
+    '</div>';
+  }).join("") +
+  '</div>';
+}
+
+async function handleSpecialCommands(raw){
+ const t = (raw||"").trim();
+ const lower = t.toLowerCase();
+
+ // 1. Uygulama Başlatma Tespiti (/AÇ veya Doğal Sesli/Metin Komutu: örn "Roblox aç", "YouTube aç")
+ let isAppCmd = false;
+ let query = "";
+
+ if (lower.startsWith("/aç") || lower.startsWith("/ac") || lower.startsWith("/open")) {
+  isAppCmd = true;
+  query = t.replace(/^\/(?:aç|ac|open)\s*/i, "").trim();
+ } else {
+  // Doğal dil / sesli komut kontrolü (örn: "Roblox aç", "YouTube aç", "Kamera aç", "aç roblox", "brawl stars başlat")
+  const nlPatterns = [
+   /^(?:lütfen\s+)?(.+?)(?:['’]?[iıuü]y?i?)?\s+(?:aç|ac|başlat|baslat|çalıştır|calistir)$/i,
+   /^(?:lütfen\s+)?(?:aç|ac|başlat|baslat|çalıştır|calistir)\s+(.+)$/i
+  ];
+  for(const p of nlPatterns){
+   const m = t.match(p);
+   if(m && m[1]){
+    const cand = m[1].trim();
+    const testApps = getDeviceAppsList();
+    const nCand = normStr(cand);
+    const matches = testApps.filter(a => normStr(a.name).includes(nCand) || nCand.includes(normStr(a.name)));
+    if(matches.length > 0){
+     isAppCmd = true;
+     query = cand;
+     break;
+    }
+   }
+  }
+ }
+
+ if (isAppCmd) {
+  const c = cur();
+  if(!c) return true;
+
+  // Mesajı kullanıcı mesajı olarak ekle
+  c.msgs.push({role:"user",content:t});
+  render();
+
+  const apps = getDeviceAppsList();
+  const nQuery = normStr(query);
+
+  // Filtreleme yap
+  let filtered = apps;
+  if (nQuery) {
+   filtered = apps.filter(a => normStr(a.name).includes(nQuery) || normStr(a.package).includes(nQuery));
+  }
+
+  // Akıllı tek eşleşme auto-launch
+  if (nQuery && filtered.length === 1) {
+   const target = filtered[0];
+   const autoMsg = "🚀 **Jarvis:** \"" + target.name + "\" uygulaması tespit edildi ve doğrudan başlatılıyor...\n\n" +
+    '<div class="jarvis-app-card" style="max-width:320px;">' +
+    '<div class="jarvis-head"><span>📲 Doğrudan Başlatıldı</span><span style="color:#22c55e;">● Aktif</span></div>' +
+    '<div class="jarvis-app-btn" onclick="launchDeviceApp(\'' + esc(target.package) + '\',\'' + esc(target.name) + '\')">' +
+    '<div class="jarvis-app-icon-wrap">' + renderAppCover(target, 56) + '</div>' +
+    '<div class="jarvis-app-info">' +
+    '<span class="jarvis-app-name">' + esc(target.name) + '</span>' +
+    '<span class="jarvis-app-pkg">' + esc(target.package) + '</span>' +
+    '</div>' +
+    '<div class="jarvis-launch-badge">⚡ Tekrar Aç</div>' +
+    '</div>' +
+    '</div>';
+   c.msgs.push({role:"assistant",content:autoMsg});
+   save();
+   render();
+   smartScrollToBottom();
+   launchDeviceApp(target.package, target.name);
+   return true;
+  }
+
+  let assistantContent = "";
+  if (!filtered.length) {
+   assistantContent = "🔍 **\"" + query + "\"** ile eşleşen bir uygulama bulunamadı.\n\nTüm cihaz uygulamalarını listelemek için sadece `/AÇ` yazabilirsin.";
+  } else {
+   const hasDuplicates = filtered.some(a => a.isDuplicate);
+   if(hasDuplicates){
+    speakJarvis("Aynı isimde uygulamalar bulundu. İstediğinizi kapağından seçebilirsiniz.");
+   }
+   assistantContent = "🤖 **Jarvis Gelişmiş Uygulama Kontrol Merkezi**\n" +
+    (query ? "Arama: *" + query + "* (" + filtered.length + " uygulama bulundu)\n" : "Cihazınızdaki uygulamalar (" + filtered.length + " adet):\n") +
+    (hasDuplicates ? "\n⚠️ **Aynı isimli uygulamalar tespit edildi!** Farklı kapak resimlerine ve altlarındaki paket adlarına bakarak istediğin sürümü kolayca ayırt edip açabilirsin:\n\n" : "\n") +
+    '<div class="jarvis-app-card">' +
+    '<div class="jarvis-head">' +
+    '<span>📲 Cihaz Uygulamaları & Kapaklar (' + filtered.length + ' Adet)</span>' +
+    '<div class="jarvis-head-btns">' +
+    '<button type="button" class="jarvis-refresh-btn" onclick="refreshDeviceAppsList()" title="Uygulama listesini yeniden tara">🔄 Listeyi Yenile</button>' +
+    '</div>' +
+    '</div>' +
+    '<div class="jarvis-grid">' +
+    filtered.map(app => {
+     return '<button type="button" class="jarvis-app-btn" onclick="launchDeviceApp(\'' + esc(app.package) + '\',\'' + esc(app.name) + '\')">' +
+      '<div class="jarvis-app-icon-wrap">' + renderAppCover(app, 56) + '</div>' +
+      '<div class="jarvis-app-info">' +
+      '<span class="jarvis-app-name">' + esc(app.name) + '</span>' +
+      '<span class="jarvis-app-pkg" title="' + esc(app.package) + '">' + esc(app.package) + '</span>' +
+      (app.isDuplicate ? '<span class="jarvis-dup-tag">⚠️ Farklı Kapak</span>' : '') +
+      '</div>' +
+      '<div class="jarvis-launch-badge">⚡ Başlat</div>' +
+      '</button>';
+    }).join("") +
+    '</div>' +
+    '</div>';
+  }
+
+  c.msgs.push({role:"assistant",content:assistantContent});
+  save();
+  render();
+  smartScrollToBottom();
+  return true;
+ }
+
+ // 2. /VİDEO [prompt]
+ if (lower.startsWith("/video") || lower.startsWith("/video:") || lower.startsWith("/video ") || lower.startsWith("/video")) {
+  const p = t.replace(/^\/(?:video|video:|v\xeddeo)\s*/i, "").trim();
+  if(!p) { showErr("Lütfen bir video açıklaması yazın. Örn: /VİDEO kardan adam"); return true; }
+  const c = cur();
+  if(!c) return true;
+  c.msgs.push({role:"user",content:t});
+  c.msgs.push({role:"assistant",content:"🎬 **İstediğin sinematik video üretildi:**\n\n[VİDEO: " + p + "]"});
+  save();
+  render();
+  smartScrollToBottom();
+  return true;
+ }
+
+ // 3. /GÖRSEL [prompt]
+ if (lower.startsWith("/görsel") || lower.startsWith("/gorsel") || lower.startsWith("/resim") || lower.startsWith("/image")) {
+  const p = t.replace(/^\/(?:görsel|gorsel|resim|image)\s*/i, "").trim();
+  if(!p) { showErr("Lütfen bir görsel açıklaması yazın. Örn: /GÖRSEL kardan adam"); return true; }
+  const c = cur();
+  if(!c) return true;
+  c.msgs.push({role:"user",content:t});
+  c.msgs.push({role:"assistant",content:"🎨 **İstediğin yüksek çözünürlüklü Flux Pro görseli oluşturuldu:**\n\n[GÖRSEL: " + p + "]"});
+  save();
+  render();
+  smartScrollToBottom();
+  return true;
+ }
+
+ return false;
+}
+
+async function send(){
+ const rawInp = ($("#inp").value||"").trim();
+ if(!busy && rawInp){
+  const handled = await handleSpecialCommands(rawInp);
+  if(handled){ $("#inp").value=""; $("#att-bar").innerHTML=""; pendingFiles=[]; renderFiles(); return; }
+ }
+
+ if(busy){
+  if(RUN){RUN.stop=true;RUN.rd&&RUN.rd.cancel().catch(()=>{})}
+  ENG&&ENG.interruptGenerate();return;
+ }
+ const t=$("#inp").value.trim();
+ if(!t&&!pendingFiles.length)return;
+
+ let c=cur();
+ if(!c){
+  c={id:uid(),title:t.slice(0,36)||"Yeni sohbet",msgs:[],created:Date.now(),mode:S.cfg.mode||"dev"};
+  S.chats.unshift(c);S.cur=c.id;
+ }
+ if(!c.msgs.length&&t)c.title=t.slice(0,36);
+ if(!c.mode)c.mode=S.cfg.mode||"dev";
+
+ const attachedImages=[],fileBlocks=[];
+ for(const f of pendingFiles){
+  if(f.isImage){
+   attachedImages.push({name:f.name,mimeType:f.type,dataUrl:f.dataUrl,base64:f.base64});
+  }else{
+   fileBlocks.push(`[Dosya: ${f.name} (${Math.round(f.size/1024)||1} KB)]\n\`\`\`${f.ext||"txt"} ${f.name}\n${f.content}\n\`\`\``);
+  }
+ }
+
+ if(attachedImages.length&&S.cfg.provider==="local"){
+  showErr("Uyarı: Yerel model (WebLLM) görsel girişi desteklemiyor. Görseller modele metin olarak aktarılamadı.");
+ }
+
+ let fullContent=t;
+ if(fileBlocks.length){
+  fullContent=(fileBlocks.join("\n\n")+"\n\n"+t).trim();
+ }
+
+ c.msgs.push({
+  role:"user",
+  content:fullContent,
+  rawText:t,
+  images:attachedImages
+ });
+
+ pendingFiles=[];
+ renderAttachments();
+ $("#inp").value="";$("#inp").style.height="auto";
+ run();
+}
+
+/* ---------- Dosya & Görsel Yükleme ---------- */
+async function processSelectedFiles(filesList){
+ for(const file of Array.from(filesList)){
+  const isImg=file.type.startsWith("image/");
+  const ext=file.name.split(".").pop().toLowerCase();
+  if(isImg){
+   await new Promise(res=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+     const dataUrl=e.target.result;
+     const base64=dataUrl.split(",")[1]||"";
+     pendingFiles.push({name:file.name,size:file.size,type:file.type,isImage:true,dataUrl,base64,ext});
+     res();
+    };
+    reader.readAsDataURL(file);
+   });
+  }else{
+   try{
+    const content=await file.text();
+    pendingFiles.push({name:file.name,size:file.size,type:file.type,isImage:false,content,ext});
+   }catch(err){
+    showErr("Dosya okunamadı: "+file.name);
+   }
+  }
+ }
+ renderAttachments();
+}
+
+$("#att-btn").onclick=()=>$("#file-inp").click();
+$("#file-inp").onchange=e=>{processSelectedFiles(e.target.files);e.target.value=""};
+$("#att-bar").onclick=e=>{
+ const b=e.target.closest("[data-rm-att]");
+ if(b){
+  pendingFiles.splice(Number(b.dataset.rmAtt),1);
+  renderAttachments();
+ }
+};
+
+const dropZone=$("#input-box");
+["dragenter","dragover"].forEach(evt=>{
+ window.addEventListener(evt,e=>{
+  e.preventDefault();
+  if(e.dataTransfer.types&&Array.from(e.dataTransfer.types).includes("Files")){
+   dropZone.classList.add("drag-over");
+  }
+ });
+});
+["dragleave","drop"].forEach(evt=>{
+ window.addEventListener(evt,e=>{
+  e.preventDefault();
+  if(evt==="drop"){
+   dropZone.classList.remove("drag-over");
+   if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length){
+    processSelectedFiles(e.dataTransfer.files);
+   }
+  }else if(e.target===document.body||e.target===window){
+   dropZone.classList.remove("drag-over");
+  }
+ });
+});
+
+/* ---------- Ses Tanıma ---------- */
+const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SpeechRec){
+ $("#mic-btn").style.display="grid";
+ recognitionInstance=new SpeechRec();
+ recognitionInstance.lang="tr-TR";
+ recognitionInstance.interimResults=true;
+ recognitionInstance.continuous=false;
+
+ recognitionInstance.onstart=()=>{
+  isRecognizing=true;
+  $("#mic-btn").classList.add("rec-active");
+  $("#mic-btn").title="Dinleniyor… Durdurmak için tıkla";
+ };
+ recognitionInstance.onresult=e=>{
+  let transcript="";
+  for(let i=e.resultIndex;i<e.results.length;++i){
+   transcript+=e.results[i][0].transcript;
+  }
+  const curVal=$("#inp").value;
+  $("#inp").value=curVal?(curVal.trim()+" "+transcript):transcript;
+  $("#inp").style.height="auto";
+  $("#inp").style.height=Math.min($("#inp").scrollHeight,180)+"px";
+ };
+ recognitionInstance.onend=()=>{
+  isRecognizing=false;
+  $("#mic-btn").classList.remove("rec-active");
+  $("#mic-btn").title="Sesle yaz (Türkçe)";
+ };
+ recognitionInstance.onerror=e=>{
+  isRecognizing=false;
+  $("#mic-btn").classList.remove("rec-active");
+  if(e.error!=="no-speech")showErr("Ses tanıma hatası: "+e.error);
+ };
+
+ $("#mic-btn").onclick=()=>{
+  if(isRecognizing){
+   recognitionInstance.stop();
+  }else{
+   try{recognitionInstance.start()}catch(err){showErr("Mikrofon başlatılamadı: "+err.message)}
+  }
+ };
+}
+
+/* ---------- Metin Seslendirme ---------- */
+function toggleSpeech(idx){
+ if(!("speechSynthesis" in window))return;
+ if(speakingMsgIndex===idx){
+  window.speechSynthesis.cancel();
+  speakingMsgIndex=-1;
+  render();
+  return;
+ }
+ window.speechSynthesis.cancel();
+ const c=cur();if(!c||!c.msgs[idx])return;
+ const raw=c.msgs[idx].content||"";
+ const clean=raw.replace(/```[\s\S]*?```/g," [kod bloğu] ").replace(/[#*`_~\[\]]/g,"").trim();
+ if(!clean)return;
+
+ const u=new SpeechSynthesisUtterance(clean);
+ u.lang="tr-TR";
+ const voices=window.speechSynthesis.getVoices();
+ const trVoice=voices.find(v=>v.lang==="tr-TR"||v.lang.startsWith("tr"));
+ if(trVoice)u.voice=trVoice;
+
+ u.onend=()=>{speakingMsgIndex=-1;render()};
+ u.onerror=()=>{speakingMsgIndex=-1;render()};
+
+ speakingMsgIndex=idx;
+ activeSpeechUtterance=u;
+ window.speechSynthesis.speak(u);
+ render();
+}
+
+/* ---------- Sohbet Arama, Sabitleme, Dışa ve İçe Aktarma ---------- */
+$("#chat-search").addEventListener("input",e=>{
+ searchQuery=e.target.value;
+ $("#search-clr").hidden=!searchQuery;
+ renderChatList();
+});
+$("#search-clr").onclick=()=>{
+ $("#chat-search").value="";
+ searchQuery="";
+ $("#search-clr").hidden=true;
+ renderChatList();
+};
+
+function exportChatJSON(chat){
+ const data=JSON.stringify(chat,null,2);
+ dl(new Blob([data],{type:"application/json"}),(chat.title.replace(/[^\w\s-]/g,"")||"sohbet")+".json");
+}
+
+function exportChatMD(chat){
+ let mdText=`# ${chat.title}\n\n*Oluşturulma: ${new Date(chat.created||Date.now()).toLocaleString("tr-TR")} | Mod: ${chat.mode||"dev"}*\n\n---\n\n`;
+ for(const m of chat.msgs){
+  const sender=m.role==="user"?"### 👤 Sen":m.role==="assistant"?"### ⚡ ErenX":"### ⚙️ Araç";
+  mdText+=`${sender}\n\n${m.content}\n\n`;
+ }
+ dl(new Blob([mdText],{type:"text/markdown"}),(chat.title.replace(/[^\w\s-]/g,"")||"sohbet")+".md");
+}
+
+$("#import-btn").onclick=()=>$("#chat-import-file").click();
+$("#chat-import-file").onchange=e=>{
+ const file=e.target.files&&e.target.files[0];
+ if(!file)return;
+ const r=new FileReader();
+ r.onload=ev=>{
+  try{
+   const j=JSON.parse(ev.target.result);
+   if(!j||!Array.isArray(j.msgs))throw new Error("Geçersiz ErenX sohbet JSON biçimi.");
+   const newChat={
+    id:uid(),
+    title:j.title||"İçe aktarılan sohbet",
+    msgs:j.msgs,
+    created:j.created||Date.now(),
+    pinned:!!j.pinned,
+    mode:j.mode||"dev"
+   };
+   S.chats.unshift(newChat);
+   S.cur=newChat.id;
+   render();
+  }catch(err){
+   showErr("İçe aktarma hatası: "+err.message);
+  }
+ };
+ r.readAsText(file);
+ e.target.value="";
+};
+
+/* ---------- Mod & Davranış Şablonları Yönetimi ---------- */
+const modeMenu=$("#mode-menu");
+$("#mode-cur-btn").onclick=e=>{
+ e.stopPropagation();
+ modeMenu.classList.toggle("open");
+};
+window.addEventListener("click",e=>{
+ if(!$("#mode-dd").contains(e.target))modeMenu.classList.remove("open");
+});
+
+modeMenu.onclick=e=>{
+ const b=e.target.closest("[data-set-mode]");
+ if(b){
+  const newMode=b.dataset.setMode;
+  const c=cur();
+  if(c)c.mode=newMode;
+  S.cfg.mode=newMode;
+  save();
+  modeMenu.classList.remove("open");
+  render();
+ }
+};
+
+const tplDlg=$("#tpl-dlg");
+
+function renderTemplateManager(){
+ const curM=getCurMode();
+ const modes=allModes();
+ const container=$("#tpl-cards-container");
+ if(!container)return;
+
+ container.innerHTML=Object.keys(modes).map(k=>{
+  const m=modes[k];
+  const isBuiltIn=!!BASE_MODES[k];
+  const isActive=(k===curM);
+  const chipsList=(m.chips||[]).map(c=>`• ${esc(c)}`).join("<br>");
+  const cleanSys=m.rawSys||(m.sys||"").replace(MEM_INSTR,"").trim();
+
+  return `
+  <div class="tpl-card ${isActive?"active":""}">
+   <div class="tpl-card-top">
+    <div class="tpl-card-title">
+     <span style="font-size:18px">${esc(m.icon)}</span>
+     <span>${esc(m.name)}</span>
+     <span class="tpl-badge ${isBuiltIn?"built-in":"custom"}">${isBuiltIn?"Yerleşik":"Özel Şablon"}</span>
+    </div>
+    ${isActive?'<span class="tpl-badge" style="background:var(--a);color:#fff;font-weight:600">✓ Bu Sohbetin Modu</span>':""}
+   </div>
+   <div class="tpl-card-desc">${esc(m.desc)}</div>
+   <details class="tpl-preview">
+    <summary>Sistem Talimatını Göster (${cleanSys.length} karakter)</summary>
+    <pre>${esc(cleanSys)}</pre>
+   </details>
+   ${m.chips&&m.chips.length?`
+   <details class="tpl-preview">
+    <summary>Örnek Başlangıç Soruları (${m.chips.length} adet)</summary>
+    <div style="font-size:11.5px;color:var(--t);margin-top:4px;line-height:1.5">${chipsList}</div>
+   </details>`:""}
+   <div class="tpl-card-acts">
+    ${isActive?`
+     <button class="btn pri" disabled style="opacity:.85;cursor:default">✓ Seçili Mod</button>
+    `:`
+     <button class="btn pri" data-tpl-act="${k}">✓ Bu Moda Geç</button>
+    `}
+    <button class="btn" data-tpl-clone="${k}">📋 Kopyala & Özelleştir</button>
+    ${!isBuiltIn?`
+     <button class="btn" data-tpl-edit="${k}">✏️ Düzenle</button>
+     <button class="btn del" data-tpl-del="${k}" style="color:var(--e)">🗑️ Sil</button>
+    `:""}
+   </div>
+  </div>`;
+ }).join("");
+}
+
+function showTplListTab(){
+ $("#tpl-tab-list").classList.add("active");
+ $("#tpl-tab-form").classList.remove("active");
+ $("#tpl-view-list").style.display="block";
+ $("#tpl-view-form").style.display="none";
+ renderTemplateManager();
+}
+
+function showTplFormTab(editId=null){
+ $("#tpl-tab-list").classList.remove("active");
+ $("#tpl-tab-form").classList.add("active");
+ $("#tpl-view-list").style.display="none";
+ $("#tpl-view-form").style.display="block";
+
+ if(editId){
+  const modes=allModes();
+  const m=modes[editId];
+  if(m){
+   $("#tpl-form-id").value=editId;
+   $("#tpl-form-title").textContent="✏️ Şablonu Düzenle: "+m.name;
+   $("#tpl-form-name").value=m.name;
+   $("#tpl-form-icon").value=m.icon;
+   $("#tpl-form-desc").value=m.desc;
+   $("#tpl-form-sys").value=m.rawSys||(m.sys||"").replace(MEM_INSTR,"").trim();
+   $("#tpl-form-chips").value=(m.chips||[]).join("\n");
+   $("#tpl-form-name").focus();
+   return;
+  }
+ }
+ $("#tpl-form-id").value="";
+ $("#tpl-form-title").textContent="✨ Yeni Davranış Şablonu Oluştur";
+ $("#tpl-form-name").value="";
+ $("#tpl-form-icon").value="✨";
+ $("#tpl-form-desc").value="";
+ $("#tpl-form-sys").value="";
+ $("#tpl-form-chips").value="";
+ $("#tpl-form-name").focus();
+}
+
+function openTemplateManager(showForm=false, editId=null){
+ if(showForm)showTplFormTab(editId);
+ else showTplListTab();
+ tplDlg.showModal();
+}
+
+function saveTemplateFromForm(){
+ const name=$("#tpl-form-name").value.trim();
+ const icon=$("#tpl-form-icon").value.trim()||"✨";
+ const desc=$("#tpl-form-desc").value.trim()||"Özel davranış modu";
+ const sys=$("#tpl-form-sys").value.trim();
+ const chipsRaw=$("#tpl-form-chips").value.trim();
+ const editId=$("#tpl-form-id").value;
+
+ if(!name||!sys){
+  alert("Lütfen şablon adını ve sistem talimatını doldurun.");
+  return;
+ }
+
+ const chips=chipsRaw.split("\n").map(s=>s.trim()).filter(Boolean);
+ S.customModes=S.customModes||[];
+
+ if(editId){
+  const idx=S.customModes.findIndex(cm=>cm.id===editId);
+  if(idx!==-1){
+   S.customModes[idx]={...S.customModes[idx],name,icon,desc,sys,chips};
+  }else{
+   S.customModes.push({id:editId,name,icon,desc,sys,chips});
+  }
+ }else{
+  const id="cm_"+uid();
+  S.customModes.push({id,name,icon,desc,sys,chips});
+  const c=cur();
+  if(c)c.mode=id;
+  S.cfg.mode=id;
+ }
+
+ save();
+ render();
+ showTplListTab();
+}
+
+$("#tpl-cards-container").onclick=e=>{
+ const actBtn=e.target.closest("[data-tpl-act]");
+ const cloneBtn=e.target.closest("[data-tpl-clone]");
+ const editBtn=e.target.closest("[data-tpl-edit]");
+ const delBtn=e.target.closest("[data-tpl-del]");
+
+ if(actBtn){
+  const k=actBtn.dataset.tplAct;
+  const c=cur();
+  if(c)c.mode=k;
+  S.cfg.mode=k;
+  save();
+  render();
+  renderTemplateManager();
+  return;
+ }
+ if(cloneBtn){
+  const k=cloneBtn.dataset.tplClone;
+  const modes=allModes();
+  const m=modes[k];
+  if(m){
+   showTplFormTab();
+   $("#tpl-form-id").value="";
+   $("#tpl-form-title").textContent="✨ Şablonu Kopyala & Özelleştir: "+m.name;
+   $("#tpl-form-name").value=m.name+" (Özel)";
+   $("#tpl-form-icon").value=m.icon;
+   $("#tpl-form-desc").value=m.desc;
+   $("#tpl-form-sys").value=m.rawSys||(m.sys||"").replace(MEM_INSTR,"").trim();
+   $("#tpl-form-chips").value=(m.chips||[]).join("\n");
+   $("#tpl-form-name").focus();
+  }
+  return;
+ }
+ if(editBtn){
+  const k=editBtn.dataset.tplEdit;
+  showTplFormTab(k);
+  return;
+ }
+ if(delBtn){
+  const k=delBtn.dataset.tplDel;
+  const modes=allModes();
+  const m=modes[k];
+  if(confirm(`"${m?m.name:k}" özel şablonunu silmek istediğinizden emin misiniz?`)){
+   S.customModes=(S.customModes||[]).filter(cm=>cm.id!==k);
+   if(S.cfg.mode===k)S.cfg.mode="dev";
+   for(const chat of (S.chats||[])){
+    if(chat.mode===k)chat.mode="dev";
+   }
+   save();
+   render();
+   renderTemplateManager();
+  }
+  return;
+ }
+};
+
+$("#emoji-picker").onclick=e=>{
+ const b=e.target.closest(".emoji-btn");
+ if(b&&b.dataset.emoji){
+  $("#tpl-form-icon").value=b.dataset.emoji;
+ }
+};
+
+$("#tpl-tab-list").onclick=()=>showTplListTab();
+$("#tpl-tab-form").onclick=()=>showTplFormTab();
+$("#tpl-form-cancel").onclick=()=>showTplListTab();
+$("#tpl-form-save").onclick=saveTemplateFromForm;
+$("#tpl-close-btn").onclick=()=>tplDlg.close();
+$("#tpl-close-x").onclick=()=>tplDlg.close();
+$("#tpl-btn").onclick=()=>openTemplateManager(false);
+$("#btn-open-tpl-manager").onclick=()=>{ modeMenu.classList.remove("open"); openTemplateManager(false); };
+$("#s-tpl-btn").onclick=()=>{ $("#dlg").close(); openTemplateManager(false); };
+
+/* ---------- Hafıza Yönetimi & Güncelleme ---------- */
+const memDlg=$("#mem-dlg");
+$("#mem-btn").onclick=()=>{
+ editingMemIdx=-1;
+ renderMemoryList();
+ $("#mem-inp").value="";
+ memDlg.showModal();
+};
+$("#mem-close-btn").onclick=()=>memDlg.close();
+
+$("#mem-add-btn").onclick=()=>{
+ const t=$("#mem-inp").value.trim();
+ if(!t)return;
+ S.memories=S.memories||[];
+ S.memories.push(t);
+ $("#mem-inp").value="";
+ renderMemoryList();
+ save();
+};
+$("#mem-inp").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("#mem-add-btn").click()}});
+
+$("#mem-list").onclick=e=>{
+ const delBtn=e.target.closest("[data-del-mem]");
+ const editBtn=e.target.closest("[data-edit-mem]");
+ const saveBtn=e.target.closest("[data-save-edited-mem]");
+ const cancelBtn=e.target.closest("#cancel-edit-mem");
+
+ if(delBtn){
+  const idx=Number(delBtn.dataset.delMem);
+  S.memories.splice(idx,1);
+  if(editingMemIdx===idx)editingMemIdx=-1;
+  renderMemoryList();
+  save();
+  return;
+ }
+ if(editBtn){
+  editingMemIdx=Number(editBtn.dataset.editMem);
+  renderMemoryList();
+  const inp=$("#edit-mem-inp");
+  if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}
+  return;
+ }
+ if(cancelBtn){
+  editingMemIdx=-1;
+  renderMemoryList();
+  return;
+ }
+ if(saveBtn){
+  const idx=Number(saveBtn.dataset.saveEditedMem);
+  const inp=$("#edit-mem-inp");
+  if(inp&&inp.value.trim()){
+   S.memories[idx]=inp.value.trim();
+   editingMemIdx=-1;
+   renderMemoryList();
+   save();
+  }
+  return;
+ }
+};
+
+$("#mem-clr-btn").onclick=()=>{
+ if(confirm("Tüm hafıza notları silinsin mi?")){
+  S.memories=[];
+  editingMemIdx=-1;
+  renderMemoryList();
+  save();
+ }
+};
+
+/* ---------- Tek Dosya İndirme (Honor Pad 10 ve Tüm Cihazlar) ---------- */
+$("#dl-html-side").onclick=downloadErenXHtml;
+$("#dl-html-top").onclick=downloadErenXHtml;
+
+/* ---------- Komut Paleti ---------- */
+const COMMANDS=[
+ {id:"new",title:"Yeni sohbet başlat",shortcut:"Ctrl+Shift+O",act:()=>{S.cur=null;sel=null;render();$("#inp").focus()}},
+ {id:"tpl_manage",title:"Davranış Şablonlarını & Kişilikleri Yönet",shortcut:"Ctrl+M",act:()=>openTemplateManager(false)},
+ {id:"dl_app",title:"ErenX.html uygulamasını indir (Tek dosya)",shortcut:"Ctrl+D",act:downloadErenXHtml},
+ {id:"proj",title:"Proje alanını aç / kapat",shortcut:"Ctrl+B",act:()=>{S.cur&&$("#app").classList.toggle("pj");renderProj()}},
+ {id:"modedev",title:"Mod değiştir: ⚡ Geliştirici",shortcut:"",act:()=>{setModeGlobal("dev")}},
+ {id:"modecoach",title:"Mod değiştir: 🌱 Koç",shortcut:"",act:()=>{setModeGlobal("coach")}},
+ {id:"modetutor",title:"Mod değiştir: 📚 Öğretmen",shortcut:"",act:()=>{setModeGlobal("tutor")}},
+ {id:"modetrans",title:"Mod değiştir: 🌐 Çevirmen",shortcut:"",act:()=>{setModeGlobal("translator")}},
+ {id:"modeedit",title:"Mod değiştir: ✍️ Editör",shortcut:"",act:()=>{setModeGlobal("editor")}},
+ {id:"memory",title:"Hafıza notlarını yönet (Ekle / Düzenle / Sil)",shortcut:"Ctrl+H",act:()=>$("#mem-btn").click()},
+ {id:"theme",title:"Tema değiştir (Koyu ⟷ Aydınlık)",shortcut:"Ctrl+Shift+T",act:()=>$("#theme").click()},
+ {id:"settings",title:"Ayarlar penceresini aç",shortcut:"Ctrl+,",act:()=>$("#set").click()},
+ {id:"search",title:"Sohbetlerde ara",shortcut:"Ctrl+F",act:()=>{$("#chat-search").focus();$("#side").classList.add("open")}},
+ {id:"exp_json",title:"Bu sohbeti JSON olarak indir",shortcut:"",act:()=>{const c=cur();c?exportChatJSON(c):showErr("Açık sohbet yok.")}},
+ {id:"exp_md",title:"Bu sohbeti Markdown (.md) olarak indir",shortcut:"",act:()=>{const c=cur();c?exportChatMD(c):showErr("Açık sohbet yok.")}},
+ {id:"import",title:"Sohbet içe aktar (JSON)",shortcut:"",act:()=>$("#chat-import-file").click()},
+ {id:"del",title:"Bu sohbeti sil",shortcut:"",act:()=>{const c=cur();if(c&&confirm("Bu sohbet silinsin mi?")){S.chats=S.chats.filter(x=>x.id!==c.id);S.cur=null;save();render()}}}
+];
+
+function setModeGlobal(mKey){
+ const c=cur();if(c)c.mode=mKey;
+ S.cfg.mode=mKey;
+ save();
+ render();
+}
+
+let cmdActiveIdx=0;
+function openCmdPalette(){
+ $("#cmd-dlg").showModal();
+ $("#cmd-inp").value="";
+ renderCmdList("");
+ $("#cmd-inp").focus();
+}
+
+function renderCmdList(filter){
+ const q=filter.toLowerCase().trim();
+ const list=COMMANDS.filter(c=>!q||c.title.toLowerCase().includes(q));
+ cmdActiveIdx=0;
+ $("#cmd-list").innerHTML=list.length?list.map((c,i)=>`
+  <button class="cmd-item ${i===0?"active":""}" data-cmd-id="${c.id}">
+   <span>${esc(c.title)}</span>
+   ${c.shortcut?`<kbd>${esc(c.shortcut)}</kbd>`:""}
+  </button>
+ `).join(""):'<div class="hint">Eşleşen komut bulunamadı.</div>';
+}
+
+$("#cmd-btn").onclick=openCmdPalette;
+$("#cmd-inp").addEventListener("input",e=>renderCmdList(e.target.value));
+$("#cmd-inp").addEventListener("keydown",e=>{
+ const items=document.querySelectorAll(".cmd-item");
+ if(!items.length)return;
+ if(e.key==="ArrowDown"){
+  e.preventDefault();
+  cmdActiveIdx=(cmdActiveIdx+1)%items.length;
+  items.forEach((it,idx)=>it.classList.toggle("active",idx===cmdActiveIdx));
+  items[cmdActiveIdx].scrollIntoView({block:"nearest"});
+ }else if(e.key==="ArrowUp"){
+  e.preventDefault();
+  cmdActiveIdx=(cmdActiveIdx-1+items.length)%items.length;
+  items.forEach((it,idx)=>it.classList.toggle("active",idx===cmdActiveIdx));
+  items[cmdActiveIdx].scrollIntoView({block:"nearest"});
+ }else if(e.key==="Enter"){
+  e.preventDefault();
+  const act=items[cmdActiveIdx];
+  if(act){act.click()}
+ }
+});
+$("#cmd-list").addEventListener("click",e=>{
+ const b=e.target.closest("[data-cmd-id]");
+ if(b){
+  const cmd=COMMANDS.find(x=>x.id===b.dataset.cmdId);
+  $("#cmd-dlg").close();
+  if(cmd)cmd.act();
+ }
+});
+
+// Global Kısayollar
+window.addEventListener("keydown",e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){
+  e.preventDefault();
+  if($("#cmd-dlg").open)$("#cmd-dlg").close();else openCmdPalette();
+ }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="m"){
+  e.preventDefault();
+  if($("#tpl-dlg").open)$("#tpl-dlg").close();else openTemplateManager(false);
+ }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="h"){
+  e.preventDefault();$("#mem-btn").click();
+ }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="d"){
+  e.preventDefault();downloadErenXHtml();
+ }else if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==="o"){
+  e.preventDefault();$("#new").click();
+ }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="b"){
+  e.preventDefault();$("#pbtn").click();
+ }else if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==="t"){
+  e.preventDefault();$("#theme").click();
+ }else if((e.ctrlKey||e.metaKey)&&e.key===","){
+  e.preventDefault();$("#set").click();
+ }else if(e.key==="Escape"){
+  if($("#cmd-dlg").open)$("#cmd-dlg").close();
+  if($("#mem-dlg").open)$("#mem-dlg").close();
+  if($("#tpl-dlg").open)$("#tpl-dlg").close();
+  if($("#dlg").open)$("#dlg").close();
+  modeMenu.classList.remove("open");
+ }
+});
+
+/* ---------- Mesaj Düzenleme & Yeniden Başlatma ---------- */
+function startEditMsg(idx){
+ editingMsgIndex=idx;
+ render();
+ const ta=$("#edit-inp");
+ if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length)}
+}
+function cancelEditMsg(){
+ editingMsgIndex=-1;
+ render();
+}
+function saveAndResendMsg(idx){
+ const ta=$("#edit-inp");
+ if(!ta)return;
+ const newText=ta.value.trim();
+ if(!newText)return;
+ const c=cur();if(!c)return;
+
+ c.msgs[idx].content=newText;
+ c.msgs[idx].rawText=newText;
+ c.msgs.splice(idx+1);
+ editingMsgIndex=-1;
+ render();
+ run();
+}
+
+/* ---------- Olaylar ---------- */
+$("#send").onclick=send;
+$("#inp").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();send()}});
+$("#inp").addEventListener("input",e=>{e.target.style.height="auto";e.target.style.height=Math.min(e.target.scrollHeight,180)+"px";checkJarvisQuickHud(e.target.value)});
+$("#new").onclick=()=>{S.cur=null;sel=null;showErr("");$("#side").classList.remove("open");render();$("#inp").focus()};
+$("#menu").onclick=()=>$("#side").classList.toggle("open");
+$("#pbtn").onclick=()=>$("#app").classList.toggle("pj");
+$("#pclose").onclick=()=>$("#app").classList.remove("pj");
+
+$("#list").onclick=e=>{
+ const o=e.target.closest("[data-open]");
+ const pin=e.target.closest("[data-pin]");
+ const ren=e.target.closest("[data-ren]");
+ const emd=e.target.closest("[data-exp-md]");
+ const ej=e.target.closest("[data-exp-json]");
+ const d=e.target.closest("[data-del]");
+
+ if(pin){
+  const chat=S.chats.find(c=>c.id===pin.dataset.pin);
+  if(chat){chat.pinned=!chat.pinned;save();render()}
+  return;
+ }
+ if(ren){
+  const chat=S.chats.find(c=>c.id===ren.dataset.ren);
+  if(chat){
+   const nn=prompt("Yeni sohbet başlığı:",chat.title);
+   if(nn&&nn.trim()){chat.title=nn.trim();save();render()}
+  }
+  return;
+ }
+ if(emd){
+  const chat=S.chats.find(c=>c.id===emd.dataset.expMd);
+  if(chat)exportChatMD(chat);
+  return;
+ }
+ if(ej){
+  const chat=S.chats.find(c=>c.id===ej.dataset.expJson);
+  if(chat)exportChatJSON(chat);
+  return;
+ }
+ if(d){
+  if(confirm("Bu sohbet silinsin mi?")){
+   S.chats=S.chats.filter(c=>c.id!==d.dataset.del);
+   if(S.cur===d.dataset.del)S.cur=null;
+   save();
+   render();
+  }
+  return;
+ }
+ if(o){
+  S.cur=o.dataset.open;showErr("");$("#side").classList.remove("open");render();
+ }
+};
+
+$("#msgs").onclick=e=>{
+ const b=e.target.closest("button");if(!b)return;
+
+ // 1. Kod Bloğu: Kopyala
+ if(b.dataset.copyCode){
+  const cb=b.closest(".cb");
+  const code=cb?cb.querySelector("pre code")?.textContent:"";
+  if(code)copy(code,b);
+  return;
+ }
+
+ // 2. Kod Bloğu: İndir (.html, .js, .py, vs.)
+ if(b.dataset.dlCode){
+  const cb=b.closest(".cb");
+  const code=cb?cb.querySelector("pre code")?.textContent:"";
+  const fn=b.dataset.filename||"kod.txt";
+  const mime=fn.endsWith(".html")?"text/html":"text/plain";
+  if(code)dl(new Blob([code],{type:mime+";charset=utf-8"}),fn);
+  return;
+ }
+
+ // 3. Kod Bloğu: Önizle (Proje panelinde anında çalıştır)
+ if(b.dataset.previewCode){
+  const cb=b.closest(".cb");
+  const code=cb?cb.querySelector("pre code")?.textContent:"";
+  if(code){
+   $("#app").classList.add("pj");
+   vmode="prev";
+   // Run in preview
+   const v=$("#view");
+   if(v){v.innerHTML=`<iframe sandbox="allow-scripts allow-modals allow-forms allow-same-origin" srcdoc="${esc(code)}" style="width:100%;height:100%;border:0;background:#fff;border-radius:8px"></iframe>`;}
+  }
+  return;
+ }
+
+ // 4. Kodun Devamını Yaz butonu
+ if(b.id==="auto-continue-btn"){
+  $("#inp").value="Kodu kaldığın yerden eksiksiz tamamla, devam et.";
+  send();
+  return;
+ }
+
+ // Standart Mesaj Aksiyonları
+ if(b.dataset.code!==undefined){copy(b.dataset.code,b);return;}
+ if(b.dataset.a==="copy"){const c=cur();if(c&&c.msgs[b.dataset.i])copy(c.msgs[b.dataset.i].content,b);return;}
+ if(b.dataset.a==="edit"){startEditMsg(Number(b.dataset.i));return;}
+ if(b.id==="save-edit"){saveAndResendMsg(Number(b.dataset.i));return;}
+ if(b.id==="cancel-edit"){cancelEditMsg();return;}
+ if(b.dataset.a==="speak"){toggleSpeech(Number(b.dataset.i));return;}
+ if(b.dataset.a==="re"){const c=cur();if(c){c.msgs.pop();run();}return;}
+ if(b.dataset.p){$("#inp").value=b.dataset.p;$("#inp").focus();return;}
+ if(b.dataset.saveMem){
+  const note=b.dataset.saveMem;
+  S.memories=S.memories||[];
+  if(!S.memories.includes(note))S.memories.push(note);
+  const mIdx=Number(b.dataset.msgIdx);
+  const c=cur();
+  if(c&&c.msgs[mIdx])c.msgs[mIdx].memorySaved=true;
+  save();render();return;
+ }
+ if(b.dataset.dismissMem){
+  const mIdx=Number(b.dataset.dismissMem);
+  const c=cur();
+  if(c&&c.msgs[mIdx])c.msgs[mIdx].memoryDismissed=true;
+  save();render();return;
+ }
+};
+
+$("#files").onclick=e=>{const b=e.target.closest("[data-f]");if(b){sel=b.dataset.f;vmode="code";renderProj()}};
+const curFile=()=>files(cur()).find(f=>f.name===sel);
+$("#fcopy").onclick=e=>{const f=curFile();if(f)copy(f.code,e.target)};
+$("#fdl").onclick=()=>{const f=curFile();if(f)dl(new Blob([f.code],{type:"text/plain;charset=utf-8"}),f.name)};
+$("#fprev").onclick=()=>{vmode=vmode==="prev"?"code":"prev";renderProj()};
+$("#fzip").onclick=()=>{const fs=files(cur());if(fs.length)dl(zip(fs),"erenx-proje.zip")};
+$("#theme").onclick = () => {
+ S.cfg.theme = S.cfg.theme === "dark" ? "light" : "dark";
+ document.documentElement.dataset.theme = S.cfg.theme;
+ save();
+ render();
+};
+
+// --- PRO MEDYA STÜDYOSU & LIGHTBOX BAĞLANTILARI ---
+const mDlg = $("#media-dlg");
+const lbDlg = $("#lightbox-dlg");
+
+// Medya Stüdyosu Açma (Giriş barındaki buton)
+const mgb = $("#media-gen-btn");
+if (mgb) mgb.onclick = () => openMediaStudio("", "image");
+
+// Medya Stüdyosu Kapatma Butonları
+const mcx = $("#media-close-x"); if (mcx) mcx.onclick = () => mDlg.close();
+const mcb = $("#media-cancel-btn"); if (mcb) mcb.onclick = () => mDlg.close();
+const mvcb = $("#media-vid-cancel-btn"); if (mvcb) mvcb.onclick = () => mDlg.close();
+
+// Medya Sekme Geçişleri
+const tImg = $("#tab-img-btn"), tVid = $("#tab-vid-btn");
+if (tImg && tVid) {
+ tImg.onclick = () => {
+  tImg.classList.add("active"); tVid.classList.remove("active");
+  $("#media-view-img").style.display = "block";
+  $("#media-view-vid").style.display = "none";
+ };
+ tVid.onclick = () => {
+  tVid.classList.add("active"); tImg.classList.remove("active");
+  $("#media-view-img").style.display = "none";
+  $("#media-view-vid").style.display = "block";
+ };
+}
+
+// Hızlı İlham Çipleri
+document.querySelectorAll(".p-chip").forEach(ch => {
+ ch.onclick = () => {
+  const isImg = !!ch.closest("#media-view-img");
+  const targetInp = isImg ? $("#img-prompt-inp") : $("#vid-prompt-inp");
+  if (targetInp) {
+   targetInp.value = ch.dataset.p || "";
+   targetInp.focus();
+  }
+ };
+});
+
+// Model Seçici
+document.querySelectorAll(".model-chip").forEach(ch => {
+ ch.onclick = () => {
+  document.querySelectorAll(".model-chip").forEach(x => x.classList.remove("selected"));
+  ch.classList.add("selected");
+ };
+});
+
+// Sanat Stili Seçici
+document.querySelectorAll(".style-chip").forEach(ch => {
+ ch.onclick = () => {
+  const parent = ch.parentElement;
+  if (parent) {
+   parent.querySelectorAll(".style-chip").forEach(x => x.classList.remove("selected"));
+   ch.classList.add("selected");
+  }
+ };
+});
+
+// En Boy Oranı Seçici
+document.querySelectorAll(".ar-chip").forEach(ch => {
+ ch.onclick = () => {
+  document.querySelectorAll(".ar-chip").forEach(x => x.classList.remove("selected"));
+  ch.classList.add("selected");
+ };
+});
+
+// Görsel Üret Butonu
+const mImgGen = $("#media-gen-img-btn");
+if (mImgGen) {
+ mImgGen.onclick = () => {
+  const baseP = ($("#img-prompt-inp").value || "").trim();
+  if (!baseP) { showErr("Lütfen bir görsel açıklaması yazın."); return; }
+  const selectedStyle = $("#img-styles .style-chip.selected")?.dataset.style || "";
+  const fullPrompt = baseP + (selectedStyle ? ", " + selectedStyle : "");
+  mDlg.close();
+  $("#inp").value = "[GÖRSEL: " + fullPrompt + "]";
+  send();
+ };
+}
+
+// Video Başlat Butonu
+const mVidGen = $("#media-gen-vid-btn");
+if (mVidGen) {
+ mVidGen.onclick = () => {
+  const baseP = ($("#vid-prompt-inp").value || "").trim();
+  if (!baseP) { showErr("Lütfen bir video açıklaması yazın."); return; }
+  const selectedStyle = $("#vid-styles .style-chip.selected")?.dataset.style || "";
+  const fullPrompt = baseP + (selectedStyle ? ", " + selectedStyle : "");
+  mDlg.close();
+  $("#inp").value = "[VİDEO: " + fullPrompt + "]";
+  send();
+ };
+}
+
+// Lightbox Kapatma & İndirme
+const lbX = $("#lightbox-close-x"); if (lbX) lbX.onclick = () => lbDlg.close();
+const lbB = $("#lightbox-close-btn"); if (lbB) lbB.onclick = () => lbDlg.close();
+
+// Android Back Tuşu Yakalayıcı (Tüm diyalog ve çekmeceleri kapatır)
+function handleAndroidBack(){
+ const lb = $("#lightbox-dlg"); if(lb && lb.open) { lb.close(); return true; }
+ const md = $("#media-dlg"); if(md && md.open) { md.close(); return true; }
+ const sd = $("#dlg"); if(sd && sd.open) { sd.close(); return true; }
+ const td = $("#tpl-dlg"); if(td && td.open) { td.close(); return true; }
+ const mem = $("#mem-dlg"); if(mem && mem.open) { mem.close(); return true; }
+ const hud = $("#jarvis-quick-hud"); if(hud && !hud.hidden) { hud.hidden = true; return true; }
+ const side = $("#side"); if(side && side.classList.contains("open")) { side.classList.remove("open"); return true; }
+ const app = $("#app"); if(app && app.classList.contains("pj")) { app.classList.remove("pj"); return true; }
+ return false;
+}
+
+// Fütüristik Cyber-Jarvis Loading Screen Motoru
+function runLoadingSequence(){
+ const ldr = document.getElementById("erenx-loader");
+ if(!ldr) return;
+ const bar = ldr.querySelector(".loader-bar-fill");
+ const txt = ldr.querySelector(".loader-status-text");
+ const pct = ldr.querySelector(".loader-percent");
+
+ const stages = [
+  { p: 20, msg: "⚡ Sinir Ağı Çekirdeği Başlatılıyor…" },
+  { p: 48, msg: "🤖 Jarvis Uygulama Radarı Yükleniyor…" },
+  { p: 76, msg: "🧠 Gemini 3.8 & Claude Motorları Hazır…" },
+  { p: 96, msg: "✨ ErenX Arayüzü Yükleniyor…" },
+  { p: 100, msg: "🚀 ErenX Sistemleri Aktif!" }
+ ];
+
+ let stepIdx = 0;
+ function nextStep(){
+  if(stepIdx >= stages.length){
+   setTimeout(()=>{
+    ldr.classList.add("fade-out");
+    setTimeout(()=>{ if(ldr && ldr.parentNode) ldr.style.display = "none"; }, 650);
+   }, 350);
+   return;
+  }
+  const s = stages[stepIdx];
+  if(bar) bar.style.width = s.p + "%";
+  if(pct) pct.textContent = "%" + s.p;
+  if(txt) txt.textContent = s.msg;
+  stepIdx++;
+  setTimeout(nextStep, stepIdx === stages.length ? 300 : 200);
+ }
+ setTimeout(nextStep, 80);
+}
+
+runLoadingSequence();
+
+
+const dlg=$("#dlg");
+$("#set").onclick=()=>{
+ const c=S.cfg;
+ $("#s-prov").value=c.provider;$("#s-base").value=c.base;$("#s-model").value=c.model;
+ $("#s-key").value=KEY;$("#s-rem").checked=c.remember;$("#s-per").checked=c.persist;$("#s-sys").value=c.sys;
+ dlg.showModal();
+};
+$("#s-prov").onchange=e=>{const d=DEF[e.target.value];$("#s-base").value=d[0];$("#s-model").value=d[1]};
+$("#s-x").onclick=()=>dlg.close();
+$("#s-ok").onclick=()=>{
+ S.cfg={...S.cfg,provider:$("#s-prov").value,base:$("#s-base").value.trim(),model:$("#s-model").value.trim(),remember:$("#s-rem").checked,persist:$("#s-per").checked,sys:$("#s-sys").value.trim()||SYS};
+ KEY=$("#s-key").value.trim();
+ if(/^(AQ\.|AIza)/.test(KEY)&&S.cfg.provider!=="gemini"){S.cfg.provider="gemini";S.cfg.base=DEF.gemini[0];S.cfg.model=DEF.gemini[1]}
+ showErr("");dlg.close();render();
+};
+
+document.documentElement.dataset.theme=S.cfg.theme;
+render();
+</script>
+</body>
+</html>
